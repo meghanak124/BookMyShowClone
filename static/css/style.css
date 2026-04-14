@@ -1,0 +1,260 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+.navbar {
+    background: #d9232d;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    text-decoration: none;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+}
+
+.welcome {
+    color: #fff3b0;
+    font-weight: bold;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto;
+}
+
+.form-card {
+    max-width: 420px;
+    margin: 50px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-card h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-card form p {
+    margin-bottom: 15px;
+}
+
+.form-card input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.btn {
+    width: 100%;
+    background: #d9232d;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background: #b71c24;
+}
+
+.message {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.hero {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.hero h1 {
+    margin-bottom: 10px;
+    font-size: 32px;
+}
+
+.section-title {
+    margin: 25px 0 15px;
+    font-size: 24px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding-bottom: 15px;
+}
+
+.card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin: 12px 12px 6px;
+}
+
+.card p {
+    margin: 0 12px;
+    color: #666;
+}
+
+.movie-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.movie-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.movie-card {
+    width: 220px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 12px;
+    background: white;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.movie-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1f2533;
+    padding: 14px 24px;
+}
+
+.logo {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.signin-btn,
+.nav-btn,
+.logout-btn,
+.menu-btn {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.signin-btn {
+    background: #f84464;
+    color: white;
+}
+
+.nav-btn,
+.logout-btn {
+    background: white;
+    color: #222;
+}
+
+.menu-btn {
+    background: transparent;
+    color: white;
+    font-size: 22px;
+}
+
+.username {
+    color: white;
+    font-size: 14px;
+}
+
+.subnav {
+    background: white;
+    padding: 10px 24px;
+    display: flex;
+    gap: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.subnav a {
+    text-decoration: none;
+    color: #222;
+}
+
+.page-content {
+    padding: 20px 24px;
+}

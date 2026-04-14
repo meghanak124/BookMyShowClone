@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block content %}
+<h1>Book Show</h1>
+
+<p>{{ show.movie.title }}</p>
+<p>{{ show.theatre.name }}</p>
+<p>{{ show.show_time }}</p>
+<p>Available Seats: {{ show.available_seats }}</p>
+
+<form method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit">Confirm Booking</button>
+</form>
+{% endblock %}

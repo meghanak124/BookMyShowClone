@@ -5,22 +5,42 @@
         <link rel="stylesheet" href="/static/css/style.css" />
     </head>
     <body>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/movies/">Movies</a>
-            <a href="/bookings/my-bookings/">My Bookings</a>
+        <header class="topbar">
+            <div class="logo-section">
+                <a href="{% url 'home' %}" class="logo">BookMyShow</a>
+            </div>
 
-            {% if user.is_authenticated %}
-            <span>Hi, {{ user.username }}</span>
-            <a href="/accounts/logout/">Logout</a>
-            {% else %}
-            <a href="/accounts/login/">Login</a>
-            <a href="/accounts/signup/">Signup</a>
-            {% endif %}
+            <div class="nav-right">
+                {% if user.is_authenticated %}
+                <span class="username">Hi, {{ user.username }}</span>
+
+                <a href="{% url 'my_bookings' %}" class="nav-btn"
+                    >My Bookings</a
+                >
+
+                <form
+                    action="{% url 'logout' %}"
+                    method="post"
+                    style="display: inline"
+                >
+                    {% csrf_token %}
+                    <button type="submit" class="nav-btn logout-btn">
+                        Logout
+                    </button>
+                </form>
+                {% else %}
+                <a href="{% url 'login' %}" class="signin-btn">Sign in</a>
+                {% endif %}
+
+                <button class="menu-btn">⋮</button>
+            </div>
+        </header>
+
+        <nav class="subnav">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'movie_list' %}">Movies</a>
         </nav>
 
-        <hr />
-
-        {% block content %}{% endblock %}
+        <main class="page-content">{% block content %}{% endblock %}</main>
     </body>
 </html>

@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block content %}
+<h1>{{ movie.title }}</h1>
+
+<p><strong>Genre:</strong> {{ movie.genre }}</p>
+<p><strong>Language:</strong> {{ movie.language }}</p>
+<p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
+<p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+<p><strong>Description:</strong> {{ movie.description }}</p>
+
+<h2>Available Shows</h2>
+
+{% if shows %}
+<ul>
+    {% for show in shows %}
+    <li>
+        {{ show.theatre.name }} - {{ show.show_time }} - Seats: {{
+        show.available_seats }}
+        <a href="{% url 'book_show' show.id %}">Book</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No shows available for this movie.</p>
+{% endif %} {% endblock %}

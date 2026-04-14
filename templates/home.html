@@ -1,18 +1,26 @@
-{% extends 'base.html' %} {% block content %}
-<h1>BookMyShow Clone</h1>
+{% extends 'base.html' %} {% block title %}Home{% endblock %} {% block content%}
+<div class="hero">
+    <h1>Welcome to BookMyShow Clone</h1>
+    <p>Book movies, explore events, and enjoy streams.</p>
+</div>
 
-<form method="get">
-    <input type="text" name="q" placeholder="Search movies" />
-    <button type="submit">Search</button>
-</form>
-
-<ul>
+<h2 class="section-title">Recommended Movies</h2>
+<div class="card-grid">
     {% for movie in movies %}
-    <li>
-        <a href="/movies/{{ movie.id }}/">{{ movie.title }}</a>
-    </li>
+    <div class="card">
+        {% if movie.poster %}
+        <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" />
+        {% else %}
+        <img
+            src="https://via.placeholder.com/300x280"
+            alt="{{ movie.title }}"
+        />
+        {% endif %}
+        <h3>{{ movie.title }}</h3>
+        <p>{{ movie.genre }}</p>
+    </div>
     {% empty %}
-    <li>No movies found</li>
+    <p>No movies available.</p>
     {% endfor %}
-</ul>
+</div>
 {% endblock %}
