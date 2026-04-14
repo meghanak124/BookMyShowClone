@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <head>
+        <title>BookMyShow Clone</title>
+        <link rel="stylesheet" href="/static/css/style.css" />
+    </head>
+    <body>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/movies/">Movies</a>
+            <a href="/bookings/my-bookings/">My Bookings</a>
+
+            {% if user.is_authenticated %}
+            <span>Hi, {{ user.username }}</span>
+            <a href="/accounts/logout/">Logout</a>
+            {% else %}
+            <a href="/accounts/login/">Login</a>
+            <a href="/accounts/signup/">Signup</a>
+            {% endif %}
+        </nav>
+
+        <hr />
+
+        {% block content %}{% endblock %}
+    </body>
+</html>

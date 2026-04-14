@@ -1,0 +1,18 @@
+{% extends 'base.html' %} {% block content %}
+<h1>BookMyShow Clone</h1>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Search movies" />
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+    {% for movie in movies %}
+    <li>
+        <a href="/movies/{{ movie.id }}/">{{ movie.title }}</a>
+    </li>
+    {% empty %}
+    <li>No movies found</li>
+    {% endfor %}
+</ul>
+{% endblock %}
