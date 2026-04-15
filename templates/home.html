@@ -10,7 +10,7 @@
     <div class="card">
         {% if movie.poster_url %}
         <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" />
-        {% endif %}
+        {% else %}
         <img
             src="https://via.placeholder.com/300x280"
             alt="{{ movie.title }}"
