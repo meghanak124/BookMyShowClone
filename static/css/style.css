@@ -191,7 +191,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #1f2533;
+    background: red;
     padding: 14px 24px;
 }
 
@@ -221,8 +221,8 @@ body {
 }
 
 .signin-btn {
-    background: #f84464;
-    color: white;
+    background: white;
+    color: black;
 }
 
 .nav-btn,
