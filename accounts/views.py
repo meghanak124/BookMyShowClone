@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render
 
 from .forms import SignUpForm
@@ -8,14 +8,12 @@ from .forms import SignUpForm
 
 def signup_view(request):
     if request.method == "POST":
-        form = SignUpForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "Account created successfully.")
-            return redirect("home")
+            form.save()
+            return redirect("login")
     else:
-        form = SignUpForm()
+        form = UserCreationForm()
 
     return render(request, "registration/signup.html", {"form": form})
 
@@ -39,8 +37,6 @@ def logout_view(request):
     messages.success(request, "Logged out successfully.")
     return redirect("home")
 
-
-from django.shortcuts import render
 
 from movies.models import Movie
 
