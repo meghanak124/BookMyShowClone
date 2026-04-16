@@ -23,7 +23,7 @@ class Like(models.Model):
         unique_together = ("user", "review")
 
     def __str__(self):
-        return f"{self.user.username} likes {self.review.id}"
+        return f"{self.user.username} likes review {self.review.id}"
 
 
 class Comment(models.Model):
@@ -36,4 +36,4 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Comment by {self.user.username} on {self.movie.title}"
+        return f"{self.user.username} - {self.movie.title}"

@@ -1,27 +1,238 @@
 {% extends "base.html" %} {% block content %}
-<h1>{{ movie.title }}</h1>
+<section class="movie-detail-section">
+    <div class="movie-detail-card">
+        <div class="movie-detail-left">
+            {% if movie.poster_url %}
+            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" />
+            {% elif movie.poster %}
+            <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" />
+            {% endif %}
+        </div>
 
-{% if movie.poster_url %}
-<img src="{{ movie.poster_url }}" alt="{{ movie.title }}" />
-{% endif %}
-<p><strong>Genre:</strong> {{ movie.genre }}</p>
-<p><strong>Language:</strong> {{ movie.language }}</p>
-<p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
-<p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-<p><strong>Description:</strong> {{ movie.description }}</p>
+        <div class="movie-detail-right">
+            <h1>{{ movie.title }}</h1>
+            <p><strong>Genre:</strong> {{ movie.genre }}</p>
+            <p><strong>Language:</strong> {{ movie.language }}</p>
+            <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
+            <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+            <p><strong>Description:</strong> {{ movie.description }}</p>
+        </div>
+    </div>
 
-<h2>Available Shows</h2>
+    <div class="shows-section">
+        <h2>Available Shows</h2>
 
-{% if shows %}
-<ul>
-    {% for show in shows %}
-    <li>
-        {{ show.theatre.name }} - {{ show.show_time }} - Seats: {{
-        show.available_seats }}
-        <a href="{% url 'book_show' show.id %}">Book</a>
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No shows available for this movie.</p>
-{% endif %} {% endblock %}
+        {% if shows %}
+        <div class="show-list">
+            {% for show in shows %}
+            <div class="show-card">
+                <p><strong>Theatre:</strong> {{ show.theatre.name }}</p>
+                <p><strong>Location:</strong> {{ show.theatre.location }}</p>
+                <p><strong>Time:</strong> {{ show.show_time }}</p>
+                <p>
+                    <strong>Available Seats:</strong> {{ show.available_seats }}
+                </p>
+
+                <a href="{% url 'book_show' show.id %}" class="book-btn"
+                    >Book Now</a
+                >
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No shows available for this movie.</p>
+        {% endif %}
+    </div>
+
+    <div class="reviews-section">
+        <div class="section-header">
+            <h2>Reviews</h2>
+            <a href="{% url 'add_review' movie.id %}" class="book-btn"
+                >Write Review</a
+            >
+        </div>
+
+        {% if reviews %}
+        <div class="review-list">
+            {% for review in reviews %}
+            <div class="review-item">
+                <p><strong>{{ review.user.username }}</strong></p>
+                <p><strong>Rating:</strong> {{ review.rating }}/5</p>
+                <p>{{ review.content }}</p>
+                <div class="review-actions">
+                    <span
+                        ><strong>Likes:</strong> {{ review.likes.count }}</span
+                    >
+
+                    {% if user.is_authenticated %}
+                    <a
+                        href="{% url 'like_review' review.id %}"
+                        class="{% if review.id in user_liked_reviews %}liked-btn{% else %}like-btn{% endif %}"
+                    >
+                        Like
+                    </a>
+                    {% endif %} {% if user == review.user %}
+                    <a href="{% url 'edit_review' review.id %}" class="edit-btn"
+                        >Edit Review</a
+                    >
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No reviews yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="comments-section">
+        <h2>Comments</h2>
+
+        <form
+            method="post"
+            action="{% url 'add_comment' movie.id %}"
+            class="comment-form"
+        >
+            {% csrf_token %}
+            <textarea
+                name="content"
+                rows="3"
+                placeholder="Write a new comment..."
+                required
+            ></textarea>
+            <button type="submit" class="book-btn">Post Comment</button>
+        </form>
+
+        {% if comments %}
+        <div class="comment-list">
+            {% for comment in comments %}
+            <div class="comment-item">
+                <p><strong>{{ comment.user.username }}</strong></p>
+                <p>{{ comment.content }}</p>
+
+                <button
+                    type="button"
+                    class="reply-toggle-btn"
+                    onclick="toggleReplyForm('reply-form-{{ comment.id }}')"
+                >
+                    Reply
+                </button>
+
+                <form
+                    method="post"
+                    action="{% url 'add_comment' movie.id %}"
+                    class="reply-form hidden-reply-form"
+                    id="reply-form-{{ comment.id }}"
+                >
+                    {% csrf_token %}
+                    <input
+                        type="hidden"
+                        name="parent_id"
+                        value="{{ comment.id }}"
+                    />
+                    <textarea
+                        name="content"
+                        rows="2"
+                        placeholder="Reply..."
+                        required
+                    ></textarea>
+                    <button type="submit" class="small-btn">Post Reply</button>
+                </form>
+
+                {% if comment.replies.all %}
+                <div class="reply-list">
+                    {% for reply in comment.replies.all %}
+                    <div class="reply-item">
+                        <p><strong>{{ reply.user.username }}</strong></p>
+                        <p>{{ reply.content }}</p>
+
+                        <button
+                            type="button"
+                            class="reply-toggle-btn"
+                            onclick="toggleReplyForm('reply-form-{{ reply.id }}')"
+                        >
+                            Reply
+                        </button>
+
+                        <form
+                            method="post"
+                            action="{% url 'add_comment' movie.id %}"
+                            class="reply-form hidden-reply-form"
+                            id="reply-form-{{ reply.id }}"
+                        >
+                            {% csrf_token %}
+                            <input
+                                type="hidden"
+                                name="parent_id"
+                                value="{{ reply.id }}"
+                            />
+                            <textarea
+                                name="content"
+                                rows="2"
+                                placeholder="Reply..."
+                                required
+                            ></textarea>
+                            <button type="submit" class="small-btn">
+                                Post Reply
+                            </button>
+                        </form>
+
+                        {% if reply.replies.all %}
+                        <div class="reply-list">
+                            {% for nested_reply in reply.replies.all %}
+                            <div class="reply-item">
+                                <p>
+                                    <strong
+                                        >{{ nested_reply.user.username
+                                        }}</strong
+                                    >
+                                </p>
+                                <p>{{ nested_reply.content }}</p>
+
+                                <button
+                                    type="button"
+                                    class="reply-toggle-btn"
+                                    onclick="toggleReplyForm('reply-form-{{ nested_reply.id }}')"
+                                >
+                                    Reply
+                                </button>
+
+                                <form
+                                    method="post"
+                                    action="{% url 'add_comment' movie.id %}"
+                                    class="reply-form hidden-reply-form"
+                                    id="reply-form-{{ nested_reply.id }}"
+                                >
+                                    {% csrf_token %}
+                                    <input
+                                        type="hidden"
+                                        name="parent_id"
+                                        value="{{ nested_reply.id }}"
+                                    />
+                                    <textarea
+                                        name="content"
+                                        rows="2"
+                                        placeholder="Reply..."
+                                        required
+                                    ></textarea>
+                                    <button type="submit" class="small-btn">
+                                        Post Reply
+                                    </button>
+                                </form>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No comments yet.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

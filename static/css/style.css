@@ -258,3 +258,314 @@ body {
 .page-content {
     padding: 20px 24px;
 }
+.movies-section {
+    padding: 20px;
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
+    gap: 24px;
+    justify-content: start;
+}
+
+.movie-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.movie-card {
+    width: 220px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-4px);
+}
+
+.movie-card img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+}
+
+.movie-card-body {
+    padding: 12px;
+}
+
+.movie-card-body h3 {
+    margin: 0 0 6px;
+    font-size: 20px;
+}
+
+.movie-card-body p {
+    margin: 0;
+    color: #555;
+}
+
+.movie-detail-section {
+    padding: 24px;
+}
+
+.movie-detail-card {
+    display: flex;
+    gap: 24px;
+    background: #fff;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    align-items: flex-start;
+}
+
+.movie-detail-left img {
+    width: 220px;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+}
+
+.movie-detail-right h1 {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.movie-detail-right p {
+    margin: 6px 0;
+}
+
+.shows-section {
+    background: #fff;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.show-list {
+    display: grid;
+    gap: 16px;
+}
+
+.show-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.book-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 16px;
+    background: #f84464;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.book-btn:hover {
+    background: #d93352;
+}
+
+.booking-section {
+    padding: 30px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.booking-card {
+    width: 100%;
+    max-width: 520px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    padding: 28px;
+}
+
+.booking-card h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.booking-info {
+    margin-bottom: 20px;
+    line-height: 1.7;
+}
+
+.booking-form p {
+    margin-bottom: 16px;
+}
+
+.booking-form input {
+    width: 100%;
+    max-width: 180px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.my-bookings-section {
+    padding: 30px 20px;
+}
+
+.booking-list {
+    display: grid;
+    gap: 18px;
+}
+
+.booking-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.booking-item h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.reviews-section,
+.comments-section,
+.review-section {
+    background: #fff;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    margin-top: 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.review-list,
+.comment-list {
+    display: grid;
+    gap: 16px;
+}
+
+.review-item,
+.comment-item,
+.reply-item {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 16px;
+    background: #fafafa;
+}
+
+.reply-list {
+    margin-top: 14px;
+    margin-left: 30px;
+    display: grid;
+    gap: 10px;
+}
+
+.comment-form,
+.reply-form,
+.review-form {
+    display: grid;
+    gap: 12px;
+}
+
+.comment-form textarea,
+.reply-form textarea,
+.review-form textarea,
+.review-form input,
+.review-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.small-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 14px;
+    background: #f84464;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.review-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.small-btn,
+.edit-btn,
+.reply-toggle-btn,
+.liked-btn,
+.like-btn {
+    display: inline-block;
+    padding: 8px 14px;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.small-btn,
+.reply-toggle-btn {
+    background: #f84464;
+    color: #fff;
+}
+.like-btn {
+    background-color: #555;
+    color: #fff;
+}
+
+.liked-btn {
+    background: #f84464;
+    color: #fff;
+}
+
+.edit-btn {
+    background: #ffd9df;
+    color: #c2183a;
+}
+.hidden-reply-form {
+    display: none;
+    margin-top: 12px;
+}
+
+.show-reply-form {
+    display: grid;
+}
+
+.reply-form {
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.reply-list {
+    margin-top: 14px;
+    margin-left: 30px;
+    display: grid;
+    gap: 10px;
+}
+
+.reply-item {
+    border-left: 3px solid #f84464;
+    padding: 12px;
+    background: #fff;
+    border-radius: 8px;
+}

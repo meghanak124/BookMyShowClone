@@ -6,6 +6,14 @@
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
         {% block extra_css %}{% endblock %}
     </head>
+    <script>
+        function toggleReplyForm(formId) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.classList.toggle("show-reply-form");
+            }
+        }
+    </script>
     <body>
         <header class="topbar">
             <div class="logo-section">

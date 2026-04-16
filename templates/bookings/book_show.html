@@ -1,13 +1,20 @@
 {% extends "base.html" %} {% block content %}
-<h1>Book Show</h1>
+<section class="booking-section">
+    <div class="booking-card">
+        <h1>Book Show</h1>
 
-<p>{{ show.movie.title }}</p>
-<p>{{ show.theatre.name }}</p>
-<p>{{ show.show_time }}</p>
-<p>Available Seats: {{ show.available_seats }}</p>
+        <div class="booking-info">
+            <p><strong>Movie:</strong> {{ show.movie.title }}</p>
+            <p><strong>Theatre:</strong> {{ show.theatre.name }}</p>
+            <p><strong>Location:</strong> {{ show.theatre.location }}</p>
+            <p><strong>Time:</strong> {{ show.show_time }}</p>
+            <p><strong>Available Seats:</strong> {{ show.available_seats }}</p>
+        </div>
 
-<form method="post">
-    {% csrf_token %} {{ form.as_p }}
-    <button type="submit">Confirm Booking</button>
-</form>
+        <form method="post" class="booking-form">
+            {% csrf_token %} {{ form.as_p }}
+            <button type="submit" class="book-btn">Confirm Booking</button>
+        </form>
+    </div>
+</section>
 {% endblock %}
