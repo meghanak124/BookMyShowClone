@@ -2,4 +2,6 @@ from django import forms
 
 
 class BookingForm(forms.Form):
-    seats_booked = forms.IntegerField(min_value=1)
+    selected_seats = forms.CharField(
+        label="Selected Seats", help_text="Example: A1,A2,A3"
+    )

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="booking-section">
+    <div class="booking-card">
+        <h1>Booking Unavailable</h1>
+        <p>{{ message }}</p>
+        <a href="{% url 'movie_list' %}" class="book-btn">Back to Movies</a>
+    </div>
+</section>
+{% endblock %}

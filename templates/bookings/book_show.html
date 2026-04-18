@@ -1,7 +1,9 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block content %}
 <section class="booking-section">
     <div class="booking-card">
-        <h1>Book Show</h1>
+        <h1>Select Seats</h1>
 
         <div class="booking-info">
             <p><strong>Movie:</strong> {{ show.movie.title }}</p>
@@ -11,10 +13,58 @@
             <p><strong>Available Seats:</strong> {{ show.available_seats }}</p>
         </div>
 
-        <form method="post" class="booking-form">
-            {% csrf_token %} {{ form.as_p }}
+        <div class="screen-preview">SCREEN THIS WAY</div>
+
+        {% if error %}
+            <p class="form-error">{{ error }}</p>
+        {% endif %}
+
+        <form method="post" id="seat-booking-form">
+            {% csrf_token %}
+            <input type="hidden" name="selected_seats" id="selected_seats">
+
+            <div class="seat-grid" style="grid-template-columns: repeat({{ show.theatre.columns }}, 1fr);">
+                {% for seat in all_seats %}
+                    <button
+                        type="button"
+                        class="seat-btn {% if seat in booked_seats %}booked-seat{% else %}available-seat{% endif %}"
+                        data-seat="{{ seat }}"
+                        {% if seat in booked_seats %}disabled{% endif %}
+                    >
+                        {{ seat }}
+                    </button>
+                {% endfor %}
+            </div>
+
+            <p><strong>Selected Seats:</strong> <span id="selected-seat-display">None</span></p>
+
             <button type="submit" class="book-btn">Confirm Booking</button>
         </form>
     </div>
 </section>
+
+<script>
+    const seatButtons = document.querySelectorAll(".available-seat");
+    const selectedSeatInput = document.getElementById("selected_seats");
+    const selectedSeatDisplay = document.getElementById("selected-seat-display");
+    const selectedSeats = [];
+
+    seatButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const seat = this.dataset.seat;
+            const index = selectedSeats.indexOf(seat);
+
+            if (index > -1) {
+                selectedSeats.splice(index, 1);
+                this.classList.remove("selected-seat");
+            } else {
+                selectedSeats.push(seat);
+                this.classList.add("selected-seat");
+            }
+
+            selectedSeatInput.value = selectedSeats.join(",");
+            selectedSeatDisplay.textContent = selectedSeats.length ? selectedSeats.join(", ") : "None";
+        });
+    });
+</script>
 {% endblock %}

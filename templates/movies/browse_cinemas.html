@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="browse-cinema-wrapper">
+    <h1>Browse by Cinemas</h1>
+
+    {% if theatre_data %}
+        <div class="cinema-list">
+            {% for item in theatre_data %}
+                <div class="cinema-card">
+                    <h2>{{ item.theatre.name }}</h2>
+                    <p class="cinema-location">{{ item.theatre.location }}</p>
+
+                    <div class="cinema-show-list">
+                        {% for show in item.shows %}
+                            <div class="cinema-show-item">
+                                <div>
+                                    <h3>{{ show.movie.title }}</h3>
+                                    <p>{{ show.show_time }}</p>
+                                    <p>Available Seats: {{ show.available_seats }}</p>
+                                </div>
+
+                                <a href="{% url 'book_show' show.id %}" class="book-btn">Book Now</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No active shows available right now.</p>
+    {% endif %}
+</section>
+{% endblock %}

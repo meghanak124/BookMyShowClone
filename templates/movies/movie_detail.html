@@ -2,9 +2,7 @@
 <section class="movie-detail-section">
     <div class="movie-detail-card">
         <div class="movie-detail-left">
-            {% if movie.poster_url %}
-            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" />
-            {% elif movie.poster %}
+            {% if movie.poster %}
             <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" />
             {% endif %}
         </div>
@@ -18,221 +16,164 @@
             <p><strong>Description:</strong> {{ movie.description }}</p>
         </div>
     </div>
+</section>
+<div class="shows-section">
+    <h2>Available Shows</h2>
 
-    <div class="shows-section">
-        <h2>Available Shows</h2>
+    {% if shows %}
+    <div class="show-list">
+        {% for show in shows %}
+        <div class="show-card">
+            <p><strong>Theatre:</strong> {{ show.theatre.name }}</p>
+            <p><strong>Location:</strong> {{ show.theatre.location }}</p>
+            <p><strong>Time:</strong> {{ show.show_time }}</p>
+            <p><strong>Available Seats:</strong> {{ show.available_seats }}</p>
+            <p><strong>Now:</strong> {{ now }}</p>
+            <p><strong>Show Time:</strong> {{ show.show_time }}</p>
 
-        {% if shows %}
-        <div class="show-list">
-            {% for show in shows %}
-            <div class="show-card">
-                <p><strong>Theatre:</strong> {{ show.theatre.name }}</p>
-                <p><strong>Location:</strong> {{ show.theatre.location }}</p>
-                <p><strong>Time:</strong> {{ show.show_time }}</p>
-                <p>
-                    <strong>Available Seats:</strong> {{ show.available_seats }}
-                </p>
-
-                <a href="{% url 'book_show' show.id %}" class="book-btn"
-                    >Book Now</a
-                >
-            </div>
-            {% endfor %}
+            {% if show.can_book %}
+            <a href="{% url 'book_show' show.id %}" class="book-btn">Book Now</a>
+            {% elif show.is_ended %}
+            <button class="disabled-btn" disabled>Show Ended</button>
+            {% elif show.is_sold_out %}
+            <button class="disabled-btn" disabled>Sold Out</button>
+            {% else %}
+            <button class="disabled-btn" disabled>Unavailable</button>
+            {% endif %}
         </div>
-        {% else %}
-        <p>No shows available for this movie.</p>
-        {% endif %}
+        {% endfor %}
     </div>
+    {% else %}
+    <p>No shows available for this movie.</p>
+    {% endif %}
+</div>
 
-    <div class="reviews-section">
-        <div class="section-header">
-            <h2>Reviews</h2>
-            <a href="{% url 'add_review' movie.id %}" class="book-btn"
-                >Write Review</a
-            >
-        </div>
-
-        {% if reviews %}
-        <div class="review-list">
-            {% for review in reviews %}
-            <div class="review-item">
-                <p><strong>{{ review.user.username }}</strong></p>
-                <p><strong>Rating:</strong> {{ review.rating }}/5</p>
-                <p>{{ review.content }}</p>
-                <div class="review-actions">
-                    <span
-                        ><strong>Likes:</strong> {{ review.likes.count }}</span
-                    >
-
-                    {% if user.is_authenticated %}
-                    <a
-                        href="{% url 'like_review' review.id %}"
-                        class="{% if review.id in user_liked_reviews %}liked-btn{% else %}like-btn{% endif %}"
-                    >
-                        Like
-                    </a>
-                    {% endif %} {% if user == review.user %}
-                    <a href="{% url 'edit_review' review.id %}" class="edit-btn"
-                        >Edit Review</a
-                    >
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p>No reviews yet.</p>
-        {% endif %}
-    </div>
-
-    <div class="comments-section">
-        <h2>Comments</h2>
-
-        <form
-            method="post"
-            action="{% url 'add_comment' movie.id %}"
-            class="comment-form"
+<div class="reviews-section">
+    <div class="section-header">
+        <h2>Reviews</h2>
+        <a href="{% url 'add_review' movie.id %}" class="book-btn"
+            >Write Review</a
         >
-            {% csrf_token %}
-            <textarea
-                name="content"
-                rows="3"
-                placeholder="Write a new comment..."
-                required
-            ></textarea>
-            <button type="submit" class="book-btn">Post Comment</button>
-        </form>
+    </div>
 
-        {% if comments %}
-        <div class="comment-list">
-            {% for comment in comments %}
-            <div class="comment-item">
-                <p><strong>{{ comment.user.username }}</strong></p>
-                <p>{{ comment.content }}</p>
+    {% if reviews %}
+    <div class="review-list">
+        {% for review in reviews %}
+        <div class="review-item">
+            <p><strong>{{ review.user.username }}</strong></p>
+            <p><strong>Rating:</strong> {{ review.rating }}/5</p>
+            <p>{{ review.content }}</p>
+            <div class="review-actions">
+                <span><strong>Likes:</strong> {{ review.likes.count }}</span>
 
-                <button
-                    type="button"
-                    class="reply-toggle-btn"
-                    onclick="toggleReplyForm('reply-form-{{ comment.id }}')"
+                {% if user.is_authenticated %}
+                <a
+                    href="{% url 'like_review' review.id %}"
+                    class="{% if review.id in user_liked_reviews %}liked-btn{% else %}like-btn{% endif %}"
                 >
-                    Reply
-                </button>
-
-                <form
-                    method="post"
-                    action="{% url 'add_comment' movie.id %}"
-                    class="reply-form hidden-reply-form"
-                    id="reply-form-{{ comment.id }}"
+                    Like
+                </a>
+                {% endif %}
+                {% if user == review.user %}
+                <a href="{% url 'edit_review' review.id %}" class="edit-btn">
+                    Edit Review</a
                 >
-                    {% csrf_token %}
-                    <input
-                        type="hidden"
-                        name="parent_id"
-                        value="{{ comment.id }}"
-                    />
-                    <textarea
-                        name="content"
-                        rows="2"
-                        placeholder="Reply..."
-                        required
-                    ></textarea>
-                    <button type="submit" class="small-btn">Post Reply</button>
+                {% endif %}
+                {% if user == review.user %}
+                <form method="post" action="{% url 'delete_review' review.id %}">
+                {% csrf_token %}
+                <button type="submit" class="edit-btn">Delete</button>
                 </form>
-
-                {% if comment.replies.all %}
-                <div class="reply-list">
-                    {% for reply in comment.replies.all %}
-                    <div class="reply-item">
-                        <p><strong>{{ reply.user.username }}</strong></p>
-                        <p>{{ reply.content }}</p>
-
-                        <button
-                            type="button"
-                            class="reply-toggle-btn"
-                            onclick="toggleReplyForm('reply-form-{{ reply.id }}')"
-                        >
-                            Reply
-                        </button>
-
-                        <form
-                            method="post"
-                            action="{% url 'add_comment' movie.id %}"
-                            class="reply-form hidden-reply-form"
-                            id="reply-form-{{ reply.id }}"
-                        >
-                            {% csrf_token %}
-                            <input
-                                type="hidden"
-                                name="parent_id"
-                                value="{{ reply.id }}"
-                            />
-                            <textarea
-                                name="content"
-                                rows="2"
-                                placeholder="Reply..."
-                                required
-                            ></textarea>
-                            <button type="submit" class="small-btn">
-                                Post Reply
-                            </button>
-                        </form>
-
-                        {% if reply.replies.all %}
-                        <div class="reply-list">
-                            {% for nested_reply in reply.replies.all %}
-                            <div class="reply-item">
-                                <p>
-                                    <strong
-                                        >{{ nested_reply.user.username
-                                        }}</strong
-                                    >
-                                </p>
-                                <p>{{ nested_reply.content }}</p>
-
-                                <button
-                                    type="button"
-                                    class="reply-toggle-btn"
-                                    onclick="toggleReplyForm('reply-form-{{ nested_reply.id }}')"
-                                >
-                                    Reply
-                                </button>
-
-                                <form
-                                    method="post"
-                                    action="{% url 'add_comment' movie.id %}"
-                                    class="reply-form hidden-reply-form"
-                                    id="reply-form-{{ nested_reply.id }}"
-                                >
-                                    {% csrf_token %}
-                                    <input
-                                        type="hidden"
-                                        name="parent_id"
-                                        value="{{ nested_reply.id }}"
-                                    />
-                                    <textarea
-                                        name="content"
-                                        rows="2"
-                                        placeholder="Reply..."
-                                        required
-                                    ></textarea>
-                                    <button type="submit" class="small-btn">
-                                        Post Reply
-                                    </button>
-                                </form>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
                 {% endif %}
             </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No reviews yet.</p>
+    {% endif %}
+</div>
+
+<div class="comments-section">
+    <h2>Comments</h2>
+
+    <form method="post" action="{% url 'add_comment' movie.id %}" class="comment-form">
+        {% csrf_token %}
+        <textarea name="content" rows="3" placeholder="Write a comment..." required></textarea>
+        <button type="submit" class="book-btn">Post Comment</button>
+    </form>
+
+    {% if comments %}
+        <div class="comment-list">
+            {% for comment in comments %}
+                <div class="comment-item">
+
+                    <div class="comment-header">
+                        <div>
+                            <p class="comment-user"><strong>{{ comment.user.username }}</strong></p>
+                            <p class="comment-text">{{ comment.content }}</p>
+                        </div>
+
+                        <div class="comment-actions">
+                            <button type="button"
+                                    class="reply-toggle-btn"
+                                    onclick="toggleReplyForm('reply-form-{{ comment.id }}')">
+                                Reply
+                            </button>
+
+                            {% if request.user.is_authenticated and request.user.id == comment.user.id %}
+                                <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Reply Form -->
+                    <form method="post"
+                          action="{% url 'add_comment' movie.id %}"
+                          class="reply-form hidden-reply-form"
+                          id="reply-form-{{ comment.id }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <textarea name="content" rows="2" placeholder="Reply..." required></textarea>
+                        <button type="submit" class="small-btn">Post Reply</button>
+                    </form>
+
+                    <!-- Replies -->
+                    {% if comment.replies.all %}
+                        <div class="reply-list">
+                            {% for reply in comment.replies.all %}
+                                <div class="reply-item">
+
+                                    <div class="comment-header">
+                                        <div>
+                                            <p class="comment-user"><strong>{{ reply.user.username }}</strong></p>
+                                            <p class="comment-text">{{ reply.content }}</p>
+                                        </div>
+
+                                        <div class="comment-actions">
+                                            {% if request.user.is_authenticated and request.user.id == reply.user.id %}
+                                                <form method="post" action="{% url 'delete_comment' reply.id %}" style="display:inline;">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="delete-btn">Delete</button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                </div>
             {% endfor %}
         </div>
-        {% else %}
+    {% else %}
         <p>No comments yet.</p>
-        {% endif %}
-    </div>
-</section>
+    {% endif %}
+</div>
+
 {% endblock %}

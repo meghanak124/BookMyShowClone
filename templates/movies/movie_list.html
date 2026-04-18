@@ -1,25 +1,78 @@
-{% extends "base.html" %} {% block content %}
-<section class="movies-section">
-    <h2>Recommended Movies</h2>
+{% extends "base.html" %}
 
-    <div class="movie-grid">
-        {% for movie in movies %}
-        <a href="{% url 'movie_detail' movie.id %}" class="movie-card-link">
-            <div class="movie-card">
-                {% if movie.poster_url %}
-                <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" />
-                {% elif movie.poster %}
-                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" />
-                {% endif %}
-                <div class="movie-card-body">
-                    <h3>{{ movie.title }}</h3>
-                    <p>{{ movie.genre }}</p>
+{% block content %}
+<section class="movie-page-wrapper">
+    <aside class="filter-sidebar">
+        <h2>Filters</h2>
+
+        <form method="get">
+            <div class="filter-card">
+                <div class="filter-header">
+                    <h3>Languages</h3>
+                </div>
+
+                <div class="filter-options">
+                    {% for language in all_languages %}
+                        <label class="filter-pill">
+                            <input
+                                type="checkbox"
+                                name="language"
+                                value="{{ language }}"
+                                {% if language in selected_languages %}checked{% endif %}
+                            >
+                            <span>{{ language }}</span>
+                        </label>
+                    {% endfor %}
                 </div>
             </div>
-        </a>
-        {% empty %}
-        <p>No movies available.</p>
-        {% endfor %}
-    </div>
+
+            <div class="filter-card">
+                <div class="filter-header">
+                    <h3>Genres</h3>
+                </div>
+
+                <div class="filter-options">
+                    {% for genre in all_genres %}
+                        <label class="filter-pill">
+                            <input
+                                type="checkbox"
+                                name="genre"
+                                value="{{ genre }}"
+                                {% if genre in selected_genres %}checked{% endif %}
+                            >
+                            <span>{{ genre }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit" class="apply-filter-btn">Apply Filters</button>
+        </form>
+
+        <a href="{% url 'browse_cinemas' %}" class="browse-cinemas-btn">Browse by Cinemas</a>
+    </aside>
+
+    <main class="movie-list-main">
+        <h1>Movies</h1>
+
+        <div class="movie-grid-list-page">
+            {% for movie in movies %}
+                <a href="{% url 'movie_detail' movie.id %}" class="movie-card-link">
+                    <div class="movie-card">
+                        {% if movie.poster %}
+                            <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                        {% endif %}
+                        <div class="movie-card-body">
+                            <h3>{{ movie.title }}</h3>
+                            <p>{{ movie.genre }}</p>
+                            <p>{{ movie.language }}</p>
+                        </div>
+                    </div>
+                </a>
+            {% empty %}
+                <p>No movies found for selected filters.</p>
+            {% endfor %}
+        </div>
+    </main>
 </section>
 {% endblock %}

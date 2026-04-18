@@ -1,11 +1,69 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>BookMyShow Clone</title>
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-        {% block extra_css %}{% endblock %}
-    </head>
+<head>
+    <title>BookMyShow Clone</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="layout-container topbar-inner">
+            <div class="topbar-left">
+                <a href="{% url 'home' %}" class="logo-link">
+                    <img src="{% static 'images/logo.png' %}" alt="BookMyShow" class="site-logo">
+                </a>
+
+                <form method="get" action="{% url 'movie_list' %}" class="search-form">
+                    <input
+                        type="text"
+                        name="q"
+                        class="search-input"
+                        placeholder="Search for Movies, Events, Plays, Sports and Activities"
+                    >
+                </form>
+            </div>
+
+            <div class="topbar-right">
+                <div class="location-dropdown">Bengaluru</div>
+
+                {% if user.is_authenticated %}
+                    <div class="user-greeting">Hi, {{ user.username }}</div>
+                    <a href="{% url 'my_bookings' %}" class="header-btn">My Bookings</a>
+
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="header-btn">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="signin-btn">Sign in</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-subnav">
+        <div class="layout-container subnav-inner">
+            <div class="subnav-left">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'movie_list' %}">Movies</a>
+                <a href="{% url 'events_page' %}">Events</a>
+                <a href="{% url 'concerts_page' %}">Concerts</a>
+                <a href="{% url 'matches_page' %}">Matches</a>
+            </div>
+
+            <div class="subnav-right">
+                <a href="{% url 'list_your_show' %}">ListYourShow</a>
+                <a href="#">Corporates</a>
+                <a href="#">Offers</a>
+                <a href="#">Gift Cards</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        {% block content %}{% endblock %}
+    </main>
+
     <script>
         function toggleReplyForm(formId) {
             const form = document.getElementById(formId);
@@ -14,43 +72,5 @@
             }
         }
     </script>
-    <body>
-        <header class="topbar">
-            <div class="logo-section">
-                <a href="{% url 'home' %}" class="logo">BookMyShow</a>
-            </div>
-
-            <div class="nav-right">
-                {% if user.is_authenticated %}
-                <span class="username">Hi, {{ user.username }}</span>
-                <a href="{% url 'my_bookings' %}" class="nav-btn"
-                    >My Bookings</a
-                >
-
-                <form
-                    action="{% url 'logout' %}"
-                    method="post"
-                    style="display: inline"
-                >
-                    {% csrf_token %}
-                    <button type="submit" class="nav-btn logout-btn">
-                        Logout
-                    </button>
-                </form>
-                {% else %}
-                <a href="{% url 'signup' %}" class="signin-btn">Sign in</a>
-                <a href="{% url 'login' %}" class="signin-btn">Login</a>
-                {% endif %}
-
-                <button class="menu-btn">⋮</button>
-            </div>
-        </header>
-
-        <nav class="subnav">
-            <a href="{% url 'home' %}">Home</a>
-            <a href="{% url 'movie_list' %}">Movies</a>
-        </nav>
-
-        <main class="page-content">{% block content %}{% endblock %}</main>
-    </body>
+</body>
 </html>

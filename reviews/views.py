@@ -30,7 +30,13 @@ def add_review(request, movie_id):
 @login_required
 def like_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
-    Like.objects.get_or_create(user=request.user, review=review)
+    existing_like = Like.objects.filter(user=request.user, review=review).first()
+
+    if existing_like:
+        existing_like.delete()
+    else:
+        Like.objects.create(user=request.user, review=review)
+
     return redirect("movie_detail", movie_id=review.movie.id)
 
 
@@ -72,3 +78,33 @@ def edit_review(request, review_id):
         form = ReviewForm(instance=review)
 
     return render(request, "reviews/edit_review.html", {"form": form, "review": review})
+
+
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    if review.user != request.user:
+        return HttpResponseForbidden("You are not allowed to delete this review.")
+
+    movie_id = review.movie.id
+
+    if request.method == "POST":
+        review.delete()
+        
+    return redirect("movie_detail", movie_id=movie_id)
+
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if comment.user != request.user:
+        return HttpResponseForbidden("You are not allowed to delete this comment.")
+
+    movie_id = comment.movie.id
+
+    if request.method == "POST":
+        comment.delete()
+
+    return redirect("movie_detail", movie_id=movie_id)

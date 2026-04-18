@@ -10,12 +10,17 @@
             <p><strong>Theatre:</strong> {{ booking.show.theatre.name }}</p>
             <p><strong>Time:</strong> {{ booking.show.show_time }}</p>
             <p><strong>Seats Booked:</strong> {{ booking.seats_booked }}</p>
-            <p><strong>Booked On:</strong> {{ booking.booking_time }}</p>
+            <p><strong>Selected Seats:</strong> {{ booking.selected_seats }}</p>
+            <p><strong>Status:</strong> {{ booking.status }}</p>
+            <form method="post" action="{% url 'delete_booking' booking.id %}">
+                {% csrf_token %}
+                <button type="submit" class="delete-btn">Cancel Booking</button>
+            </form>
         </div>
         {% endfor %}
     </div>
     {% else %}
-    <p>You have no bookings yet.</p>
+    <p>No upcoming bookings.</p>
     {% endif %}
 </section>
 {% endblock %}

@@ -1,27 +1,122 @@
-{% extends 'base.html' %} {% block title %}Home{% endblock %} {% block content%}
-<div class="hero">
-    <h1>Welcome to BookMyShow Clone</h1>
-    <p>Book movies, explore events, and enjoy streams.</p>
-</div>
+{% extends "base.html" %}
+{% load static %}
 
-<h2 class="section-title">Recommended Movies</h2>
-<div class="card-grid">
-    {% for movie in movies %}
-    <a href="{% url 'movie_detail' movie.id %}" class="movie-card-link">
-        <div class="movie-card">
-            {% if movie.poster_url %}
-            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" />
-            {% elif movie.poster %}
-            <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" />
-            {% endif %}
-            <div class="movie-card-body">
-                <h3>{{ movie.title }}</h3>
-                <p>{{ movie.genre }}</p>
+{% block content %}
+<section class="home-wrapper">
+
+    <div class="hero-slider-wrapper">
+        <button class="hero-arrow left" onclick="moveHeroSlide(-1)">&#10094;</button>
+
+        <div class="hero-slider-window">
+            <div class="hero-slider-track" id="heroSliderTrack">
+                <div class="hero-slide">
+                    <div class="hero-welcome">
+                        <h1>Welcome to BookMyShow</h1>
+                        <p>Book movies, explore events, and enjoy streams.</p>
+                    </div>
+                </div>
+
+                {% for image_path in hero_images %}
+                    <div class="hero-slide">
+                        <img src="{% static image_path %}" alt="Hero Banner">
+                    </div>
+                {% endfor %}
             </div>
         </div>
-    </a>
-    {% empty %}
-    <p>No movies available.</p>
-    {% endfor %}
-</div>
+
+        <button class="hero-arrow right" onclick="moveHeroSlide(1)">&#10095;</button>
+    </div>
+
+    <div class="hero-dots" id="heroDots"></div>
+
+    <section class="movies-section">
+        <div class="section-header">
+            <h2>Recommended Movies</h2>
+        </div>
+
+        <div class="movie-carousel-wrapper">
+            <button class="movie-arrow left" onclick="moveMovieSlide(-1)">&#10094;</button>
+
+            <div class="movie-carousel-window">
+                <div class="movie-carousel-track" id="movieCarouselTrack">
+                    {% for movie in movies %}
+                        <a href="{% url 'movie_detail' movie.id %}" class="movie-card-link">
+                            <div class="movie-card">
+                                {% if movie.poster %}
+                                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                                {% endif %}
+                                <div class="movie-card-body">
+                                    <h3>{{ movie.title }}</h3>
+                                    <p>{{ movie.genre }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button class="movie-arrow right" onclick="moveMovieSlide(1)">&#10095;</button>
+        </div>
+    </section>
+</section>
+
+<script>
+    let heroIndex = 0;
+    const heroTrack = document.getElementById("heroSliderTrack");
+    const heroSlides = document.querySelectorAll(".hero-slide");
+    const heroDotsContainer = document.getElementById("heroDots");
+
+    heroSlides.forEach((_, index) => {
+        const dot = document.createElement("span");
+        dot.classList.add("hero-dot");
+        if (index === 0) dot.classList.add("active-dot");
+        dot.addEventListener("click", () => {
+            heroIndex = index;
+            updateHeroSlider();
+        });
+        heroDotsContainer.appendChild(dot);
+    });
+
+    function updateHeroSlider() {
+        heroTrack.style.transform = `translateX(-${heroIndex * 100}%)`;
+        const dots = document.querySelectorAll(".hero-dot");
+        dots.forEach((dot, index) => {
+            dot.classList.toggle("active-dot", index === heroIndex);
+        });
+    }
+
+    function moveHeroSlide(direction) {
+        heroIndex += direction;
+        if (heroIndex < 0) heroIndex = heroSlides.length - 1;
+        if (heroIndex >= heroSlides.length) heroIndex = 0;
+        updateHeroSlider();
+    }
+
+    setInterval(() => {
+        moveHeroSlide(1);
+    }, 1000);
+
+    let movieIndex = 0;
+    const movieTrack = document.getElementById("movieCarouselTrack");
+    const movieCards = document.querySelectorAll(".movie-card-link");
+    const visibleCards = 5;
+    const maxMovieIndex = Math.max(0, movieCards.length - visibleCards);
+
+    function updateMovieSlider() {
+        const cardWidth = movieCards[0].offsetWidth + 24;
+        movieTrack.style.transform = `translateX(-${movieIndex * cardWidth}px)`;
+    }
+
+    function moveMovieSlide(direction) {
+        movieIndex += direction;
+        if (movieIndex < 0) movieIndex = 0;
+        if (movieIndex > maxMovieIndex) movieIndex = maxMovieIndex;
+        updateMovieSlider();
+    }
+
+    window.addEventListener("resize", updateMovieSlider);
+</script>
+
+
+
 {% endblock %}
