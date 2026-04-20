@@ -1,18 +1,83 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="static-page">
-    <div class="layout-container">
-        <div class="static-card">
-            <h1>Events</h1>
-            <p>Discover exciting events happening near you.</p>
-            <div class="placeholder-grid">
-                <div class="placeholder-item">Music Events</div>
-                <div class="placeholder-item">Food Festivals</div>
-                <div class="placeholder-item">Comedy Shows</div>
-                <div class="placeholder-item">Workshops</div>
+<section class="content-page-wrapper">
+    <aside class="filter-sidebar">
+        <h2>Filters</h2>
+
+        <form method="get">
+            <div class="filter-card">
+                <h3>Languages</h3>
+                <div class="filter-options">
+                    {% for language in all_languages %}
+                        <label class="filter-pill">
+                            <input type="checkbox" name="language" value="{{ language }}" {% if language in selected_languages %}checked{% endif %}>
+                            <span>{{ language }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
             </div>
+
+            <div class="filter-card">
+                <h3>Categories</h3>
+                <div class="filter-options">
+                    {% for category in all_categories %}
+                        <label class="filter-pill">
+                            <input type="checkbox" name="category" value="{{ category }}" {% if category in selected_categories %}checked{% endif %}>
+                            <span>{{ category }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+           
+
+            <button type="submit" class="apply-filter-btn">Apply Filters</button>
+        </form>
+    </aside>
+
+    <main class="content-grid-main">
+        <h1>{{ title }}</h1>
+
+        <div class="content-card-grid">
+            {% for item in items %}
+            <a href="{% url 'event_detail' item.id %}" class="suggestion-link">
+                <div class="content-card">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <div class="content-card-body">
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.location }}</p>
+                        <p>{{ item.date }}</p>
+                    </div>
+                </div>
+                </a>
+            {% empty %}
+                <p>No events found.</p>
+            {% endfor %}
         </div>
-    </div>
+    </main>
 </section>
+<div class="suggestions-section">
+    <div class="section-header">
+        <h2>You May Also Like</h2>
+    </div>
+
+    <div class="suggestions-grid">
+        {% for item in suggestions %}
+            <a href="{% url 'event_detail' item.id %}" class="suggestion-link">
+                <div class="suggestion-card">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <div class="suggestion-card-body">
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.location }}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

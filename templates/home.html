@@ -29,35 +29,103 @@
 
     <div class="hero-dots" id="heroDots"></div>
 
-    <section class="movies-section">
-        <div class="section-header">
-            <h2>Recommended Movies</h2>
-        </div>
+    <section class="home-content-section">
+    <div class="section-header">
+        <h2>Recommended Movies</h2>
+        <a href="{% url 'movie_list' %}" class="see-all-link">See All</a>
+    </div>
 
-        <div class="movie-carousel-wrapper">
-            <button class="movie-arrow left" onclick="moveMovieSlide(-1)">&#10094;</button>
-
-            <div class="movie-carousel-window">
-                <div class="movie-carousel-track" id="movieCarouselTrack">
-                    {% for movie in movies %}
-                        <a href="{% url 'movie_detail' movie.id %}" class="movie-card-link">
-                            <div class="movie-card">
-                                {% if movie.poster %}
-                                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
-                                {% endif %}
-                                <div class="movie-card-body">
-                                    <h3>{{ movie.title }}</h3>
-                                    <p>{{ movie.genre }}</p>
-                                </div>
-                            </div>
-                        </a>
-                    {% endfor %}
+    <div class="home-content-grid">
+        {% for item in movies %}
+            <a href="{% url 'movie_detail' item.id %}" class="home-card-link">
+                <div class="home-card">
+                    {% if item.poster %}
+                        <img src="{{ item.poster.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <div class="home-card-body">
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.genre }}</p>
+                    </div>
                 </div>
-            </div>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+        <section class="home-content-section">
+    <div class="section-header">
+        <h2>Events in {{ selected_location }}</h2>
+        <a href="{% url 'events_page' %}" class="see-all-link">See All</a>
+    </div>
 
-            <button class="movie-arrow right" onclick="moveMovieSlide(1)">&#10095;</button>
-        </div>
-    </section>
+    <div class="home-content-grid">
+        {% for item in events %}
+            <a href="{% url 'event_detail' item.id %}" class="home-card-link">
+                <div class="home-card">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <div class="home-card-body">
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.location }}</p>
+                        <p>{{ item.date }}</p>
+                    </div>
+                </div>
+            </a>
+        {% empty %}
+            <p>No events available.</p>
+        {% endfor %}
+    </div>
+</section>
+<section class="home-content-section">
+    <div class="section-header">
+        <h2>Concerts in {{ selected_location }}</h2>
+        <a href="{% url 'concerts_page' %}" class="see-all-link">See All</a>
+    </div>
+
+    <div class="home-content-grid">
+        {% for item in concerts %}
+            <a href="{% url 'concert_detail' item.id %}" class="home-card-link">
+                <div class="home-card">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <div class="home-card-body">
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.artist }}</p>
+                        <p>{{ item.location }}</p>
+                    </div>
+                </div>
+            </a>
+        {% empty %}
+            <p>No concerts available.</p>
+        {% endfor %}
+    </div>
+</section>
+<section class="home-content-section">
+    <div class="section-header">
+        <h2>Matches in {{ selected_location }}</h2>
+        <a href="{% url 'matches_page' %}" class="see-all-link">See All</a>
+    </div>
+
+    <div class="home-content-grid">
+        {% for item in matches %}
+            <a href="{% url 'match_detail' item.id %}" class="home-card-link">
+                <div class="home-card">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <div class="home-card-body">
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.teams }}</p>
+                        <p>{{ item.location }}</p>
+                    </div>
+                </div>
+            </a>
+        {% empty %}
+            <p>No matches available.</p>
+        {% endfor %}
+    </div>
+</section>
 </section>
 
 <script>

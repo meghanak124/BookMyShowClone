@@ -24,7 +24,16 @@
             </div>
 
             <div class="topbar-right">
-                <div class="location-dropdown">Bengaluru</div>
+                <form method="get" action="{% url 'home' %}" class="location-form">
+                    <select name="location" class="location-select" onchange="this.form.submit()">
+                        <option value="Bengaluru" {% if selected_location == "Bengaluru" %}selected{% endif %}>Bengaluru</option>
+                            {% if locations %}
+                                {% for loc in locations %}
+                                    <option value="{{ loc }}" {% if selected_location == loc %}selected{% endif %}>{{ loc }}</option>
+                                {% endfor %}
+                            {% endif %}
+                    </select>
+                </form>
 
                 {% if user.is_authenticated %}
                     <div class="user-greeting">Hi, {{ user.username }}</div>

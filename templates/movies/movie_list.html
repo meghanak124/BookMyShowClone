@@ -75,4 +75,25 @@
         </div>
     </main>
 </section>
+<div class="suggestions-section">
+    <div class="section-header">
+        <h2>You May Also Like</h2>
+    </div>
+
+    <div class="suggestions-grid">
+        {% for item in suggestions %}
+            <a href="{% url 'movie_detail' item.id %}" class="suggestion-link">
+                <div class="suggestion-card">
+                    {% if item.poster %}
+                        <img src="{{ item.poster.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <div class="suggestion-card-body">
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.genre }}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

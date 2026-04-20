@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="movie-detail-section">
+    <div class="movie-detail-card">
+        <div class="movie-detail-left">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+            {% endif %}
+        </div>
+
+        <div class="movie-detail-right">
+            <h1>{{ item.title }}</h1>
+            <p><strong>Sport:</strong> {{ item.sport }}</p>
+            <p><strong>Teams:</strong> {{ item.teams }}</p>
+            <p><strong>Language:</strong> {{ item.language }}</p>
+            <p><strong>Location:</strong> {{ item.location }}</p>
+            <p><strong>Date:</strong> {{ item.date }}</p>
+            <p><strong>Description:</strong> {{ item.description }}</p>
+
+            <a href="#" class="book-btn">Book Tickets</a>
+        </div>
+    </div>
+
+    <div class="suggestions-section">
+        <div class="section-header">
+            <h2>You May Also Like</h2>
+        </div>
+
+        <div class="suggestions-grid">
+            {% for suggestion in suggestions %}
+                <a href="{% url 'match_detail' suggestion.id %}" class="suggestion-link">
+                    <div class="suggestion-card">
+                        {% if suggestion.image %}
+                            <img src="{{ suggestion.image.url }}" alt="{{ suggestion.title }}">
+                        {% endif %}
+                        <div class="suggestion-card-body">
+                            <h3>{{ suggestion.title }}</h3>
+                            <p>{{ suggestion.teams }}</p>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -43,6 +43,8 @@ def movie_list(request):
             for genre in value.split():
                 genre_set.add(genre.strip())
 
+    suggestions = Movie.objects.exclude(id__in=movies.values_list("id", flat=True))[:5]
+
     context = {
         "movies": movies.distinct(),
         "all_languages": sorted(language_set),
@@ -50,6 +52,7 @@ def movie_list(request):
         "selected_languages": selected_languages,
         "selected_genres": selected_genres,
         "query": query,
+        "suggestions": suggestions,
     }
     return render(request, "movies/movie_list.html", context)
 
@@ -72,6 +75,8 @@ def movie_detail(request, movie_id):
             request.user.like_set.filter(review__movie=movie).values_list("review_id", flat=True)
         )
 
+    recommended_movies = Movie.objects.exclude(id=movie.id)[:5]
+
     return render(request, "movies/movie_detail.html", {
         "movie": movie,
         "shows": shows,
@@ -79,6 +84,7 @@ def movie_detail(request, movie_id):
         "comments": comments,
         "user_liked_reviews": user_liked_reviews,
         "now": now,
+        "recommended_movies": recommended_movies,
     })
 
 def browse_cinemas(request):

@@ -175,5 +175,25 @@
         <p>No comments yet.</p>
     {% endif %}
 </div>
+<div class="recommended-section">
+    <div class="section-header">
+        <h2>You May Also Like</h2>
+    </div>
 
+    <div class="unified-card-grid">
+        {% for recommended in recommended_movies %}
+            <a href="{% url 'movie_detail' recommended.id %}" class="movie-card-link">
+                <div class="unified-card">
+                    {% if recommended.poster %}
+                        <img src="{{ recommended.poster.url }}" alt="{{ recommended.title }}">
+                    {% endif %}
+                    <div class="unified-card-body">
+                        <h3>{{ recommended.title }}</h3>
+                        <p>{{ recommended.genre }}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
