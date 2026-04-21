@@ -2,189 +2,175 @@
 {% load static %}
 
 {% block content %}
-<section class="home-wrapper">
+<div class="home-shell">
 
-    <div class="hero-slider-wrapper">
-        <button class="hero-arrow left" onclick="moveHeroSlide(-1)">&#10094;</button>
+    <section class="hero-section">
+        <div class="hero-slider">
+            <button class="hero-arrow hero-prev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
 
-        <div class="hero-slider-window">
-            <div class="hero-slider-track" id="heroSliderTrack">
-                <div class="hero-slide">
-                    <div class="hero-welcome">
-                        <h1>Welcome to BookMyShow</h1>
-                        <p>Book movies, explore events, and enjoy streams.</p>
-                    </div>
+            <div class="hero-viewport">
+                <div class="hero-track">
+                    {% for slide in hero_slides %}
+                        <a href="{{ slide.link|default:'#' }}" class="hero-slide">
+                            <img src="{{ slide.image }}" alt="banner">
+                        </a>
+                    {% endfor %}
                 </div>
-
-                {% for image_path in hero_images %}
-                    <div class="hero-slide">
-                        <img src="{% static image_path %}" alt="Hero Banner">
-                    </div>
-                {% endfor %}
             </div>
+
+            <button class="hero-arrow hero-next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
         </div>
 
-        <button class="hero-arrow right" onclick="moveHeroSlide(1)">&#10095;</button>
+        <div class="hero-dots">
+            {% for slide in hero_slides %}
+                <button class="hero-dot {% if forloop.first %}active{% endif %}"></button>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="bms-row-section">
+        <div class="section-top">
+            <h2>Recommended Movies</h2>
+            <a href="{% url 'movie_list' %}">See All</a>
+        </div>
+
+        <div class="bms-carousel" data-carousel>
+            <button class="carousel-nav carousel-prev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div class="bms-carousel-track">
+                {% for item in movie_cards %}
+                    <a href="{% url 'movie_detail' item.id %}" class="movie-poster-card">
+                        <div class="poster-image-wrap">
+                            <img src="{{ item.image }}" alt="{{ item.title }}">
+                            <div class="poster-meta-strip">
+                                {% if item.meta_icon == 'like' %}
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-star"></i>
+                                {% endif %}
+                                <span>{{ item.meta_text }}</span>
+                            </div>
+                        </div>
+
+                        <div class="poster-card-content">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.subtitle }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <button class="carousel-nav carousel-next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <section class="promo-strip">
+        <img src="{% static 'images/stream-banner.png' %}" alt="Promo Banner">
+    </section>
+
+    <section class="bms-row-section">
+        <div class="section-top">
+            <h2>The Best Of Live Events</h2>
+            <a href="{% url 'events_page' %}">See All</a>
+        </div>
+
+        <div class="bms-carousel" data-carousel>
+            <button class="carousel-nav carousel-prev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div class="bms-carousel-track">
+                {% for item in event_cards %}
+                    <a href="{% url 'event_detail' item.id %}" class="square-event-card">
+                        <div class="square-event-image">
+                            <img src="{{ item.image }}" alt="{{ item.title }}">
+                        </div>
+                        <div class="square-event-content">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.subtitle }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <button class="carousel-nav carousel-next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+<section class="bms-row-section dark-premiere">
+    <div class="premiere-copy">
+        <img src="{% static 'images/premiere-logo.png' %}" alt="Premiere" class="premiere-logo">
+        <div>
+            <h2>Premieres</h2>
+            <p>Brand new releases every Friday</p>
+        </div>
     </div>
 
-    <div class="hero-dots" id="heroDots"></div>
+    <div class="bms-carousel" data-carousel>
+        <button class="carousel-nav carousel-prev">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
 
-    <section class="home-content-section">
-    <div class="section-header">
-        <h2>Recommended Movies</h2>
-        <a href="{% url 'movie_list' %}" class="see-all-link">See All</a>
-    </div>
-
-    <div class="home-content-grid">
-        {% for item in movies %}
-            <a href="{% url 'movie_detail' item.id %}" class="home-card-link">
-                <div class="home-card">
-                    {% if item.poster %}
-                        <img src="{{ item.poster.url }}" alt="{{ item.title }}">
-                    {% endif %}
-                    <div class="home-card-body">
-                        <h3>{{ item.title }}</h3>
-                        <p>{{ item.genre }}</p>
+        <div class="bms-carousel-track">
+            {% for item in premiere_cards %}
+                <a href="{% url 'movie_detail' item.id %}" class="movie-poster-card premiere-card">
+                    <div class="poster-image-wrap">
+                        <img src="{{ item.image }}" alt="{{ item.title }}">
                     </div>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
-</section>
-        <section class="home-content-section">
-    <div class="section-header">
-        <h2>Events in {{ selected_location }}</h2>
-        <a href="{% url 'events_page' %}" class="see-all-link">See All</a>
-    </div>
-
-    <div class="home-content-grid">
-        {% for item in events %}
-            <a href="{% url 'event_detail' item.id %}" class="home-card-link">
-                <div class="home-card">
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
-                    {% endif %}
-                    <div class="home-card-body">
+                    <div class="poster-card-content light-text">
                         <h3>{{ item.title }}</h3>
-                        <p>{{ item.location }}</p>
-                        <p>{{ item.date }}</p>
+                        <p>{{ item.subtitle }}</p>
                     </div>
-                </div>
-            </a>
-        {% empty %}
-            <p>No events available.</p>
-        {% endfor %}
+                </a>
+            {% endfor %}
+        </div>
+
+        <button class="carousel-nav carousel-next">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
     </div>
 </section>
-<section class="home-content-section">
-    <div class="section-header">
-        <h2>Concerts in {{ selected_location }}</h2>
-        <a href="{% url 'concerts_page' %}" class="see-all-link">See All</a>
-    </div>
 
-    <div class="home-content-grid">
-        {% for item in concerts %}
-            <a href="{% url 'concert_detail' item.id %}" class="home-card-link">
-                <div class="home-card">
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
-                    {% endif %}
-                    <div class="home-card-body">
-                        <h3>{{ item.title }}</h3>
-                        <p>{{ item.artist }}</p>
-                        <p>{{ item.location }}</p>
-                    </div>
-                </div>
-            </a>
-        {% empty %}
-            <p>No concerts available.</p>
-        {% endfor %}
-    </div>
-</section>
-<section class="home-content-section">
-    <div class="section-header">
-        <h2>Matches in {{ selected_location }}</h2>
-        <a href="{% url 'matches_page' %}" class="see-all-link">See All</a>
-    </div>
+    <section class="bms-row-section">
+        <div class="section-top">
+            <h2>Outdoor Events</h2>
+            <a href="{% url 'matches_page' %}">See All</a>
+        </div>
 
-    <div class="home-content-grid">
-        {% for item in matches %}
-            <a href="{% url 'match_detail' item.id %}" class="home-card-link">
-                <div class="home-card">
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
-                    {% endif %}
-                    <div class="home-card-body">
-                        <h3>{{ item.title }}</h3>
-                        <p>{{ item.teams }}</p>
-                        <p>{{ item.location }}</p>
-                    </div>
-                </div>
-            </a>
-        {% empty %}
-            <p>No matches available.</p>
-        {% endfor %}
-    </div>
-</section>
-</section>
+        <div class="bms-carousel" data-carousel>
+            <button class="carousel-nav carousel-prev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
 
-<script>
-    let heroIndex = 0;
-    const heroTrack = document.getElementById("heroSliderTrack");
-    const heroSlides = document.querySelectorAll(".hero-slide");
-    const heroDotsContainer = document.getElementById("heroDots");
+            <div class="bms-carousel-track">
+                {% for item in match_cards %}
+                    <a href="{% url 'match_detail' item.id %}" class="square-event-card">
+                        <div class="square-event-image">
+                            <img src="{{ item.image }}" alt="{{ item.title }}">
+                        </div>
+                        <div class="square-event-content">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.subtitle }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
 
-    heroSlides.forEach((_, index) => {
-        const dot = document.createElement("span");
-        dot.classList.add("hero-dot");
-        if (index === 0) dot.classList.add("active-dot");
-        dot.addEventListener("click", () => {
-            heroIndex = index;
-            updateHeroSlider();
-        });
-        heroDotsContainer.appendChild(dot);
-    });
+            <button class="carousel-nav carousel-next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
 
-    function updateHeroSlider() {
-        heroTrack.style.transform = `translateX(-${heroIndex * 100}%)`;
-        const dots = document.querySelectorAll(".hero-dot");
-        dots.forEach((dot, index) => {
-            dot.classList.toggle("active-dot", index === heroIndex);
-        });
-    }
-
-    function moveHeroSlide(direction) {
-        heroIndex += direction;
-        if (heroIndex < 0) heroIndex = heroSlides.length - 1;
-        if (heroIndex >= heroSlides.length) heroIndex = 0;
-        updateHeroSlider();
-    }
-
-    setInterval(() => {
-        moveHeroSlide(1);
-    }, 1000);
-
-    let movieIndex = 0;
-    const movieTrack = document.getElementById("movieCarouselTrack");
-    const movieCards = document.querySelectorAll(".movie-card-link");
-    const visibleCards = 5;
-    const maxMovieIndex = Math.max(0, movieCards.length - visibleCards);
-
-    function updateMovieSlider() {
-        const cardWidth = movieCards[0].offsetWidth + 24;
-        movieTrack.style.transform = `translateX(-${movieIndex * cardWidth}px)`;
-    }
-
-    function moveMovieSlide(direction) {
-        movieIndex += direction;
-        if (movieIndex < 0) movieIndex = 0;
-        if (movieIndex > maxMovieIndex) movieIndex = maxMovieIndex;
-        updateMovieSlider();
-    }
-
-    window.addEventListener("resize", updateMovieSlider);
-</script>
-
-
-
+</div>
 {% endblock %}

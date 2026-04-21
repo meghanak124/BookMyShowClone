@@ -1,199 +1,107 @@
-{% extends "base.html" %} {% block content %}
-<section class="movie-detail-section">
-    <div class="movie-detail-card">
-        <div class="movie-detail-left">
-            {% if movie.poster %}
-            <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" />
-            {% endif %}
-        </div>
+{% extends "base.html" %}
+{% load static %}
 
-        <div class="movie-detail-right">
-            <h1>{{ movie.title }}</h1>
-            <p><strong>Genre:</strong> {{ movie.genre }}</p>
-            <p><strong>Language:</strong> {{ movie.language }}</p>
-            <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
-            <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-            <p><strong>Description:</strong> {{ movie.description }}</p>
-        </div>
-    </div>
-</section>
-<div class="shows-section">
-    <h2>Available Shows</h2>
+{% block content %}
+<div class="bms-movie-list-page">
+    <div class="bms-movie-list-container">
 
-    {% if shows %}
-    <div class="show-list">
-        {% for show in shows %}
-        <div class="show-card">
-            <p><strong>Theatre:</strong> {{ show.theatre.name }}</p>
-            <p><strong>Location:</strong> {{ show.theatre.location }}</p>
-            <p><strong>Time:</strong> {{ show.show_time }}</p>
-            <p><strong>Available Seats:</strong> {{ show.available_seats }}</p>
-            <p><strong>Now:</strong> {{ now }}</p>
-            <p><strong>Show Time:</strong> {{ show.show_time }}</p>
+        <aside class="bms-filters-column">
+            <h2 class="filters-title">Filters</h2>
 
-            {% if show.can_book %}
-            <a href="{% url 'book_show' show.id %}" class="book-btn">Book Now</a>
-            {% elif show.is_ended %}
-            <button class="disabled-btn" disabled>Show Ended</button>
-            {% elif show.is_sold_out %}
-            <button class="disabled-btn" disabled>Sold Out</button>
-            {% else %}
-            <button class="disabled-btn" disabled>Unavailable</button>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <p>No shows available for this movie.</p>
-    {% endif %}
-</div>
-
-<div class="reviews-section">
-    <div class="section-header">
-        <h2>Reviews</h2>
-        <a href="{% url 'add_review' movie.id %}" class="book-btn"
-            >Write Review</a
-        >
-    </div>
-
-    {% if reviews %}
-    <div class="review-list">
-        {% for review in reviews %}
-        <div class="review-item">
-            <p><strong>{{ review.user.username }}</strong></p>
-            <p><strong>Rating:</strong> {{ review.rating }}/5</p>
-            <p>{{ review.content }}</p>
-            <div class="review-actions">
-                <span><strong>Likes:</strong> {{ review.likes.count }}</span>
-
-                {% if user.is_authenticated %}
-                <a
-                    href="{% url 'like_review' review.id %}"
-                    class="{% if review.id in user_liked_reviews %}liked-btn{% else %}like-btn{% endif %}"
-                >
-                    Like
-                </a>
-                {% endif %}
-                {% if user == review.user %}
-                <a href="{% url 'edit_review' review.id %}" class="edit-btn">
-                    Edit Review</a
-                >
-                {% endif %}
-                {% if user == review.user %}
-                <form method="post" action="{% url 'delete_review' review.id %}">
-                {% csrf_token %}
-                <button type="submit" class="edit-btn">Delete</button>
-                </form>
-                {% endif %}
+            <div class="bms-filter-box">
+                <div class="bms-filter-box-header">
+                    <span><i class="fa-solid fa-angle-up"></i> Languages</span>
+                    <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
+                </div>
+                <div class="bms-filter-tags-grid">
+                    {% for lang in all_languages %}
+                        <a
+                            href="?location={{ selected_location }}&language={{ lang }}"
+                            class="bms-filter-tag {% if lang in selected_languages %}active{% endif %}">
+                            {{ lang }}
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <p>No reviews yet.</p>
-    {% endif %}
-</div>
 
-<div class="comments-section">
-    <h2>Comments</h2>
+            <div class="bms-filter-box">
+                <div class="bms-filter-box-header">
+                    <span><i class="fa-solid fa-angle-down"></i> Genres</span>
+                    <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
+                </div>
+                <div class="bms-filter-tags-grid">
+                    {% for genre in all_genres %}
+                        <a
+                            href="?location={{ selected_location }}&genre={{ genre }}"
+                            class="bms-filter-tag {% if genre in selected_genres %}active{% endif %}">
+                            {{ genre }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
 
-    <form method="post" action="{% url 'add_comment' movie.id %}" class="comment-form">
-        {% csrf_token %}
-        <textarea name="content" rows="3" placeholder="Write a comment..." required></textarea>
-        <button type="submit" class="book-btn">Post Comment</button>
-    </form>
+            <div class="bms-filter-box collapsed">
+                <div class="bms-filter-box-header">
+                    <span><i class="fa-solid fa-angle-down"></i> Format</span>
+                    <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
+                </div>
+            </div>
 
-    {% if comments %}
-        <div class="comment-list">
-            {% for comment in comments %}
-                <div class="comment-item">
+            <a href="{% url 'browse_cinemas' %}" class="browse-cinemas-btn">Browse by Cinemas</a>
+        </aside>
 
-                    <div class="comment-header">
-                        <div>
-                            <p class="comment-user"><strong>{{ comment.user.username }}</strong></p>
-                            <p class="comment-text">{{ comment.content }}</p>
-                        </div>
+        <section class="bms-movies-column">
+            <h1 class="movies-heading">
+                Movies in {{ selected_location }}
+            </h1>
 
-                        <div class="comment-actions">
-                            <button type="button"
-                                    class="reply-toggle-btn"
-                                    onclick="toggleReplyForm('reply-form-{{ comment.id }}')">
-                                Reply
-                            </button>
+            {% if selected_languages or selected_genres %}
+                <div class="bms-selected-filters">
+                    {% for lang in selected_languages %}
+                        <span class="selected-filter-chip">{{ lang }}</span>
+                    {% endfor %}
+                    {% for genre in selected_genres %}
+                        <span class="selected-filter-chip">{{ genre }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-                            {% if request.user.is_authenticated and request.user.id == comment.user.id %}
-                                <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="delete-btn">Delete</button>
-                                </form>
+            <div class="coming-soon-strip">
+                <span>Coming Soon</span>
+                <a href="#">Explore Upcoming Movies <i class="fa-solid fa-angle-right"></i></a>
+            </div>
+
+            <div class="bms-movie-grid">
+                {% for movie in movies %}
+                    <a href="{% url 'movie_detail' movie.id %}" class="bms-movie-card">
+                        <div class="bms-movie-poster-wrap">
+                            {% if movie.poster %}
+                                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                            {% else %}
+                                <img src="{% static 'images/default-poster.jpg' %}" alt="{{ movie.title }}">
                             {% endif %}
+
+                            <div class="bms-poster-meta-strip">
+                                {% if movie.meta_type == "rating" %}
+                                    <i class="fa-solid fa-star"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                {% endif %}
+                                <span>{{ movie.meta_value|default:"-" }}</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Reply Form -->
-                    <form method="post"
-                          action="{% url 'add_comment' movie.id %}"
-                          class="reply-form hidden-reply-form"
-                          id="reply-form-{{ comment.id }}">
-                        {% csrf_token %}
-                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                        <textarea name="content" rows="2" placeholder="Reply..." required></textarea>
-                        <button type="submit" class="small-btn">Post Reply</button>
-                    </form>
-
-                    <!-- Replies -->
-                    {% if comment.replies.all %}
-                        <div class="reply-list">
-                            {% for reply in comment.replies.all %}
-                                <div class="reply-item">
-
-                                    <div class="comment-header">
-                                        <div>
-                                            <p class="comment-user"><strong>{{ reply.user.username }}</strong></p>
-                                            <p class="comment-text">{{ reply.content }}</p>
-                                        </div>
-
-                                        <div class="comment-actions">
-                                            {% if request.user.is_authenticated and request.user.id == reply.user.id %}
-                                                <form method="post" action="{% url 'delete_comment' reply.id %}" style="display:inline;">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="delete-btn">Delete</button>
-                                                </form>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                </div>
-                            {% endfor %}
+                        <div class="bms-movie-card-body">
+                            <h3>{{ movie.title }}</h3>
+                            <p class="movie-cert">{{ movie.duration|default:"UA13+" }}</p>
+                            <p class="movie-lang-genre">{{ movie.language }}</p>
                         </div>
-                    {% endif %}
-
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>No comments yet.</p>
-    {% endif %}
-</div>
-<div class="recommended-section">
-    <div class="section-header">
-        <h2>You May Also Like</h2>
-    </div>
-
-    <div class="unified-card-grid">
-        {% for recommended in recommended_movies %}
-            <a href="{% url 'movie_detail' recommended.id %}" class="movie-card-link">
-                <div class="unified-card">
-                    {% if recommended.poster %}
-                        <img src="{{ recommended.poster.url }}" alt="{{ recommended.title }}">
-                    {% endif %}
-                    <div class="unified-card-body">
-                        <h3>{{ recommended.title }}</h3>
-                        <p>{{ recommended.genre }}</p>
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
+                    </a>
+                {% empty %}
+                    <p>No movies found for this city and filter selection.</p>
+                {% endfor %}
+            </div>
+        </section>
     </div>
 </div>
 {% endblock %}

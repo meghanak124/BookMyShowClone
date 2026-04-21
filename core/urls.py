@@ -1,22 +1,21 @@
 from django.urls import path
-from .views import (
-    home,
-    events_page,
-    concerts_page,
-    matches_page,
-    list_your_show,
-    event_detail,
-    concert_detail,
-    match_detail,
-)
+from . import views
 
 urlpatterns = [
-    path("", home, name="home"),
-    path("events/", events_page, name="events_page"),
-    path("events/<int:event_id>/", event_detail, name="event_detail"),
-    path("concerts/", concerts_page, name="concerts_page"),
-    path("concerts/<int:concert_id>/", concert_detail, name="concert_detail"),
-    path("matches/", matches_page, name="matches_page"),
-    path("matches/<int:match_id>/", match_detail, name="match_detail"),
-    path("list-your-show/", list_your_show, name="list_your_show"),
+    path("", views.home, name="home"),
+    path("events/", views.events_page, name="events_page"),
+    path("plays/", views.plays_page, name="plays_page"),
+    path("sports/", views.sports_page, name="sports_page"),
+    path("activities/", views.activities_page, name="activities_page"),
+    path("stream/", views.streams_page, name="streams_page"),
+    path("ipl/", views.ipl_page, name="ipl_page"),
+
+    path("events/<int:pk>/", views.event_detail, name="event_detail"),
+    path("plays/<int:pk>/", views.play_detail, name="play_detail"),
+    path("sports/<int:pk>/", views.sport_detail, name="sport_detail"),
+    path("activities/<int:pk>/", views.activity_detail, name="activity_detail"),
+    path("stream/<int:pk>/", views.stream_detail, name="stream_detail"),
+    path("matches/", views.matches_page, name="matches_page"),
+    path("matches/<int:match_id>/", views.match_detail, name="match_detail"),
+    path("list-your-show/", views.list_your_show, name="list_your_show"),
 ]

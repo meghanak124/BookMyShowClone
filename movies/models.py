@@ -1,15 +1,28 @@
 from cloudinary.models import CloudinaryField
 from django.db import models
 
-
 class Movie(models.Model):
-    title = models.CharField(max_length=200)
-    genre = models.CharField(max_length=100)
-    duration = models.PositiveIntegerField(help_text="Duration in minutes")
-    language = models.CharField(max_length=50)
+    title = models.CharField(max_length=255)
+    genre = models.CharField(max_length=255)
+    duration = models.CharField(max_length=100)
+    language = models.CharField(max_length=255)
+    format = models.CharField(max_length=255, blank=True, null=True)
     release_date = models.DateField()
-    description = models.TextField(blank=True)
-    poster = CloudinaryField("posters", blank=True, null=True)
+    description = models.TextField()
+    poster = CloudinaryField("image", blank=True, null=True)
+    
+
+    meta_type = models.CharField(
+        max_length=20,
+        choices=[
+            ("like", "Like"),
+            ("rating", "Rating"),
+        ],
+        default="like",
+    )
+    meta_value = models.CharField(max_length=100, blank=True, null=True)
+    card_subtitle = models.CharField(max_length=255, blank=True, null=True)
+    is_premiere = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

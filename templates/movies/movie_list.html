@@ -1,99 +1,164 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<section class="movie-page-wrapper">
-    <aside class="filter-sidebar">
-        <h2>Filters</h2>
+<div class="bms-movie-list-page">
+    <div class="bms-movie-list-container">
 
-        <form method="get">
-            <div class="filter-card">
-                <div class="filter-header">
-                    <h3>Languages</h3>
-                </div>
+        <aside class="bms-filters-column">
+    <h2 class="filters-title">Filters</h2>
 
-                <div class="filter-options">
-                    {% for language in all_languages %}
-                        <label class="filter-pill">
-                            <input
-                                type="checkbox"
-                                name="language"
-                                value="{{ language }}"
-                                {% if language in selected_languages %}checked{% endif %}
-                            >
-                            <span>{{ language }}</span>
-                        </label>
-                    {% endfor %}
-                </div>
-            </div>
+    <div class="bms-filter-box">
+        <div class="bms-filter-box-header">
+            <span><i class="fa-solid fa-angle-up"></i> Languages</span>
+            <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
+        </div>
+        <div class="bms-filter-tags-grid">
+            {% for lang in all_languages %}
+    {% if lang in selected_languages %}
+        <a
+            href="?location={{ selected_location }}{% for l in selected_languages %}{% if l != lang %}&language={{ l }}{% endif %}{% endfor %}{% for g in selected_genres %}&genre={{ g }}{% endfor %}{% for f in selected_formats %}&format={{ f }}{% endfor %}"
+            class="bms-filter-tag active">
+            {{ lang }}
+        </a>
+    {% else %}
+        <a
+            href="?location={{ selected_location }}{% for l in selected_languages %}&language={{ l }}{% endfor %}&language={{ lang }}{% for g in selected_genres %}&genre={{ g }}{% endfor %}{% for f in selected_formats %}&format={{ f }}{% endfor %}"
+            class="bms-filter-tag">
+            {{ lang }}
+        </a>
+    {% endif %}
+{% endfor %}
+        </div>
+    </div>
 
-            <div class="filter-card">
-                <div class="filter-header">
-                    <h3>Genres</h3>
-                </div>
-
-                <div class="filter-options">
-                    {% for genre in all_genres %}
-                        <label class="filter-pill">
-                            <input
-                                type="checkbox"
-                                name="genre"
-                                value="{{ genre }}"
-                                {% if genre in selected_genres %}checked{% endif %}
-                            >
-                            <span>{{ genre }}</span>
-                        </label>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <button type="submit" class="apply-filter-btn">Apply Filters</button>
-        </form>
-
-        <a href="{% url 'browse_cinemas' %}" class="browse-cinemas-btn">Browse by Cinemas</a>
-    </aside>
-
-    <main class="movie-list-main">
-        <h1>Movies</h1>
-
-        <div class="movie-grid-list-page">
-            {% for movie in movies %}
-                <a href="{% url 'movie_detail' movie.id %}" class="movie-card-link">
-                    <div class="movie-card">
-                        {% if movie.poster %}
-                            <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
-                        {% endif %}
-                        <div class="movie-card-body">
-                            <h3>{{ movie.title }}</h3>
-                            <p>{{ movie.genre }}</p>
-                            <p>{{ movie.language }}</p>
-                        </div>
-                    </div>
+    <div class="bms-filter-box">
+        <div class="bms-filter-box-header">
+            <span><i class="fa-solid fa-angle-down"></i> Genres</span>
+            <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
+        </div>
+        <div class="bms-filter-tags-grid">
+            {% for genre in all_genres %}
+                <a
+                    href="?location={{ selected_location }}&genre={{ genre }}"
+                    class="bms-filter-tag {% if genre in selected_genres %}active{% endif %}">
+                    {{ genre }}
                 </a>
-            {% empty %}
-                <p>No movies found for selected filters.</p>
             {% endfor %}
         </div>
-    </main>
-</section>
-<div class="suggestions-section">
-    <div class="section-header">
-        <h2>You May Also Like</h2>
     </div>
 
-    <div class="suggestions-grid">
-        {% for item in suggestions %}
-            <a href="{% url 'movie_detail' item.id %}" class="suggestion-link">
-                <div class="suggestion-card">
-                    {% if item.poster %}
-                        <img src="{{ item.poster.url }}" alt="{{ item.title }}">
-                    {% endif %}
-                    <div class="suggestion-card-body">
-                        <h3>{{ item.title }}</h3>
-                        <p>{{ item.genre }}</p>
-                    </div>
+    <div class="bms-filter-box">
+        <div class="bms-filter-box-header">
+            <span><i class="fa-solid fa-angle-down"></i> Format</span>
+            <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
+        </div>
+        <div class="bms-filter-tags-grid">
+            {% for fmt in all_formats %}
+                <a
+                    href="?location={{ selected_location }}&format={{ fmt }}"
+                    class="bms-filter-tag {% if fmt in selected_formats %}active{% endif %}">
+                    {{ fmt }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <a href="{% url 'browse_cinemas' %}" class="browse-cinemas-btn">Browse by Cinemas</a>
+</aside>
+
+        <section class="bms-movies-column">
+            <h1 class="movies-heading">
+                Movies in {{ selected_location }}
+            </h1>
+
+            {% if selected_languages or selected_genres or selected_formats %}
+                <div class="bms-selected-filters">
+                {% for lang in selected_languages %}
+                    <a href="?location={{ selected_location }}{% for l in selected_languages %}{% if l != lang %}&language={{ l }}{% endif %}{% endfor %}{% for g in selected_genres %}&genre={{ g }}{% endfor %}{% for f in selected_formats %}&format={{ f }}{% endfor %}" class="selected-filter-chip">
+                        {{ lang }} ×
+                    </a>
+                {% endfor %}
+
+                {% for genre in selected_genres %}
+                    <a href="?location={{ selected_location }}{% for l in selected_languages %}&language={{ l }}{% endfor %}{% for g in selected_genres %}{% if g != genre %}&genre={{ g }}{% endif %}{% endfor %}{% for f in selected_formats %}&format={{ f }}{% endfor %}" class="selected-filter-chip">
+                        {{ genre }} ×
+                    </a>
+                {% endfor %}
+
+                {% for fmt in selected_formats %}
+                    <a href="?location={{ selected_location }}{% for l in selected_languages %}&language={{ l }}{% endfor %}{% for g in selected_genres %}&genre={{ g }}{% endfor %}{% for f in selected_formats %}{% if f != fmt %}&format={{ f }}{% endif %}{% endfor %}" class="selected-filter-chip">
+                        {{ fmt }} ×
+                    </a>
+                {% endfor %}
                 </div>
-            </a>
-        {% endfor %}
+            {% endif %}
+
+            <div class="coming-soon-strip">
+                <span>Coming Soon</span>
+                <a href="#">Explore Upcoming Movies <i class="fa-solid fa-angle-right"></i></a>
+            </div>
+
+            <div class="bms-movie-grid">
+                {% for movie in movies %}
+                    <a href="{% url 'movie_detail' movie.id %}" class="bms-movie-card">
+                        <div class="bms-movie-poster-wrap">
+                            {% if movie.poster %}
+                                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                            {% else %}
+                                <img src="{% static 'images/default-poster.jpg' %}" alt="{{ movie.title }}">
+                            {% endif %}
+
+                            <div class="bms-poster-meta-strip">
+                                {% if movie.meta_type == "rating" %}
+                                    <i class="fa-solid fa-star"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                {% endif %}
+                                <span>{{ movie.meta_value|default:"-" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="bms-movie-card-body">
+                            <h3>{{ movie.title }}</h3>
+                            <p class="movie-cert">{{ movie.duration|default:"UA13+" }}</p>
+                            <p class="movie-lang-genre">{{ movie.language }}</p>
+                        </div>
+                    </a>
+                {% empty %}
+<div class="bms-empty-state">
+    <img src="{% static 'images/empty-filter-state.png' %}" alt="No results">
+    <h3>Caught up in the filter-maze</h3>
+    <p>Your filter combination didn’t fetch any results... Kindly reset to discover more.</p>
+    <a href="{% url 'movie_list' %}?location={{ selected_location }}" class="reset-filters-btn">
+        Reset Filters
+    </a>
+</div>                {% endfor %}
+            </div>
+        </section>
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".bms-filter-box-header span").forEach(function (toggle) {
+        toggle.addEventListener("click", function () {
+            const box = toggle.closest(".bms-filter-box");
+            const content = box.querySelector(".bms-filter-tags-grid");
+            const icon = toggle.querySelector("i");
+
+            if (!content) return;
+
+            if (content.style.display === "none") {
+                content.style.display = "flex";
+                icon.classList.remove("fa-angle-down");
+                icon.classList.add("fa-angle-up");
+            } else {
+                content.style.display = "none";
+                icon.classList.remove("fa-angle-up");
+                icon.classList.add("fa-angle-down");
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

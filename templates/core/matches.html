@@ -58,24 +58,26 @@
     </main>
 </section>
 <div class="suggestions-section">
-    <div class="section-header">
-        <h2>You May Also Like</h2>
-    </div>
+  <div class="section-header">
+    <h2>You May Also Like</h2>
+  </div>
 
-    <div class="suggestions-grid">
-        {% for item in suggestions %}
-            <a href="{% url 'match_detail' item.id %}" class="suggestion-link">
-                <div class="suggestion-card">
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
-                    {% endif %}
-                    <div class="suggestion-card-body">
-                        <h3>{{ item.title }}</h3>
-                        <p>{{ item.teams }}</p>
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
+  <div class="suggestions-grid">
+    {% for item in suggestions %}
+      <a href="{% url 'match_detail' item.id %}" class="suggestion-link">
+        <div class="suggestion-card">
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.title }}">
+          {% endif %}
+          <div class="suggestion-card-body">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.sport }}</p>  
+          </div>
+        </div>
+      </a>
+    {% empty %}
+      <p>No suggestions available.</p>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

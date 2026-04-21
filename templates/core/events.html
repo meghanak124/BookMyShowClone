@@ -1,83 +1,116 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<section class="content-page-wrapper">
-    <aside class="filter-sidebar">
-        <h2>Filters</h2>
+<div class="bms-events-page">
+    <div class="bms-events-container">
 
-        <form method="get">
-            <div class="filter-card">
-                <h3>Languages</h3>
-                <div class="filter-options">
-                    {% for language in all_languages %}
-                        <label class="filter-pill">
-                            <input type="checkbox" name="language" value="{{ language }}" {% if language in selected_languages %}checked{% endif %}>
-                            <span>{{ language }}</span>
-                        </label>
-                    {% endfor %}
+        <aside class="bms-events-filters-column">
+            <h2 class="filters-title">Filters</h2>
+
+            <div class="bms-filter-box">
+                <div class="bms-filter-box-header">
+                    <span><i class="fa-solid fa-angle-up"></i> Categories</span>
+                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
                 </div>
-            </div>
-
-            <div class="filter-card">
-                <h3>Categories</h3>
-                <div class="filter-options">
+                <div class="bms-filter-tags-grid">
                     {% for category in all_categories %}
-                        <label class="filter-pill">
-                            <input type="checkbox" name="category" value="{{ category }}" {% if category in selected_categories %}checked{% endif %}>
-                            <span>{{ category }}</span>
-                        </label>
+                        <a
+                            href="?location={{ selected_location }}&category={{ category }}"
+                            class="bms-filter-tag {% if category in selected_categories %}active{% endif %}">
+                            {{ category }}
+                        </a>
                     {% endfor %}
                 </div>
             </div>
 
-           
-
-            <button type="submit" class="apply-filter-btn">Apply Filters</button>
-        </form>
-    </aside>
-
-    <main class="content-grid-main">
-        <h1>{{ title }}</h1>
-
-        <div class="content-card-grid">
-            {% for item in items %}
-            <a href="{% url 'event_detail' item.id %}" class="suggestion-link">
-                <div class="content-card">
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
-                    {% endif %}
-                    <div class="content-card-body">
-                        <h3>{{ item.title }}</h3>
-                        <p>{{ item.location }}</p>
-                        <p>{{ item.date }}</p>
-                    </div>
+            <div class="bms-filter-box">
+                <div class="bms-filter-box-header">
+                    <span><i class="fa-solid fa-angle-down"></i> Date</span>
+                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
                 </div>
-                </a>
-            {% empty %}
-                <p>No events found.</p>
-            {% endfor %}
-        </div>
-    </main>
-</section>
-<div class="suggestions-section">
-    <div class="section-header">
-        <h2>You May Also Like</h2>
-    </div>
+            </div>
 
-    <div class="suggestions-grid">
-        {% for item in suggestions %}
-            <a href="{% url 'event_detail' item.id %}" class="suggestion-link">
-                <div class="suggestion-card">
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
-                    {% endif %}
-                    <div class="suggestion-card-body">
-                        <h3>{{ item.title }}</h3>
-                        <p>{{ item.location }}</p>
-                    </div>
+            <div class="bms-filter-box">
+                <div class="bms-filter-box-header">
+                    <span><i class="fa-solid fa-angle-down"></i> Languages</span>
+                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
                 </div>
-            </a>
-        {% endfor %}
+                <div class="bms-filter-tags-grid">
+                    {% for lang in all_languages %}
+                        <a
+                            href="?location={{ selected_location }}&language={{ lang }}"
+                            class="bms-filter-tag {% if lang in selected_languages %}active{% endif %}">
+                            {{ lang }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="bms-filter-box">
+                <div class="bms-filter-box-header">
+                    <span><i class="fa-solid fa-angle-down"></i> More Filters</span>
+                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
+                </div>
+            </div>
+
+            <div class="bms-filter-box">
+                <div class="bms-filter-box-header">
+                    <span><i class="fa-solid fa-angle-down"></i> Price</span>
+                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
+                </div>
+            </div>
+
+            <a href="#" class="browse-cinemas-btn">Browse by Venues</a>
+        </aside>
+
+        <section class="bms-events-content-column">
+            <h1 class="events-heading">Events in {{ selected_location }}</h1>
+
+            {% if selected_categories or selected_languages %}
+                <div class="bms-selected-filters">
+                    {% for category in selected_categories %}
+                        <a href="?location={{ selected_location }}{% for c in selected_categories %}{% if c != category %}&category={{ c }}{% endif %}{% endfor %}{% for l in selected_languages %}&language={{ l }}{% endfor %}" class="selected-filter-chip">
+                            {{ category }} ×
+                        </a>
+                    {% endfor %}
+
+                    {% for lang in selected_languages %}
+                        <a href="?location={{ selected_location }}{% for c in selected_categories %}&category={{ c }}{% endfor %}{% for l in selected_languages %}{% if l != lang %}&language={{ l }}{% endif %}{% endfor %}" class="selected-filter-chip">
+                            {{ lang }} ×
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="bms-events-grid">
+                {% for item in items %}
+                    <a href="{% url 'event_detail' item.id %}" class="bms-event-card">
+                        <div class="bms-event-poster-wrap">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                            {% else %}
+                                <img src="{% static 'images/default-event.jpg' %}" alt="{{ item.title }}">
+                            {% endif %}
+                            {% if item.date %}
+                                <div class="event-date-strip">{{ item.date }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="bms-event-card-body">
+                            <h3>{{ item.title }}</h3>
+                            <p class="event-venue">{{ item.location }}</p>
+                            <p class="event-category">{{ item.category }}</p>
+                            {% if item.price %}
+                                <p class="event-price">₹ {{ item.price }} onwards</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% empty %}
+                    <p>No events found for this city.</p>
+                {% endfor %}
+            </div>
+        </section>
     </div>
 </div>
 {% endblock %}

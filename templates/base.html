@@ -1,85 +1,434 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BookMyShow Clone</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <header class="topbar">
-        <div class="layout-container topbar-inner">
-            <div class="topbar-left">
-                <a href="{% url 'home' %}" class="logo-link">
-                    <img src="{% static 'images/logo.png' %}" alt="BookMyShow" class="site-logo">
+    <header class="bms-header">
+        <div class="bms-topbar">
+            <div class="bms-topbar-inner">
+                <a href="{% url 'home' %}" class="bms-logo-link">
+                    <img src="{% static 'images/logo.png' %}" alt="BookMyShow" class="bms-logo">
                 </a>
 
-                <form method="get" action="{% url 'movie_list' %}" class="search-form">
+                <form action="{% url 'movie_list' %}" method="get" class="bms-search-form">
+                    <i class="fa-solid fa-magnifying-glass"></i>
                     <input
                         type="text"
                         name="q"
-                        class="search-input"
                         placeholder="Search for Movies, Events, Plays, Sports and Activities"
+                        value="{{ request.GET.q|default:'' }}"
                     >
                 </form>
+
+                <div class="bms-topbar-right">
+                    <div class="bms-location-box">
+                        <button type="button" class="city-open-btn" id="openCityModal">
+                            <span>{{ selected_location|default:"Hyderabad" }}</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+
+                    <div class="bms-user-box">
+                        <i class="fa-regular fa-circle-user"></i>
+                        {% if user.is_authenticated %}
+                            <span>Hi, {{ user.username }}</span>
+                        {% else %}
+                            <span>Hi, Guest</span>
+                        {% endif %}
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'my_bookings' %}" class="header-pill-btn">My Bookings</a>
+                        <form action="{% url 'logout' %}" method="post" class="logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="header-pill-btn">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="header-pill-btn">Sign In</a>
+                    {% endif %}
+                </div>
             </div>
+        </div>
 
-            <div class="topbar-right">
-                <form method="get" action="{% url 'home' %}" class="location-form">
-                    <select name="location" class="location-select" onchange="this.form.submit()">
-                        <option value="Bengaluru" {% if selected_location == "Bengaluru" %}selected{% endif %}>Bengaluru</option>
-                            {% if locations %}
-                                {% for loc in locations %}
-                                    <option value="{{ loc }}" {% if selected_location == loc %}selected{% endif %}>{{ loc }}</option>
-                                {% endfor %}
-                            {% endif %}
-                    </select>
-                </form>
+        <div class="bms-nav-row">
+            <div class="bms-nav-inner">
+                <nav class="bms-main-nav">
+                    <a href="{% url 'movie_list' %}" class="{% if request.resolver_match.url_name == 'movie_list' or request.resolver_match.url_name == 'movie_detail' %}active{% endif %}">Movies</a>
+                    <a href="{% url 'streams_page' %}" class="{% if request.resolver_match.url_name == 'streams_page' or request.resolver_match.url_name == 'stream_detail' %}active{% endif %}">Stream</a>
+                    <a href="{% url 'events_page' %}" class="{% if request.resolver_match.url_name == 'events_page' or request.resolver_match.url_name == 'event_detail' %}active{% endif %}">Events</a>
+                    <a href="{% url 'plays_page' %}" class="{% if request.resolver_match.url_name == 'plays_page' or request.resolver_match.url_name == 'play_detail' %}active{% endif %}">Plays</a>
+                    <a href="{% url 'sports_page' %}" class="{% if request.resolver_match.url_name == 'sports_page' or request.resolver_match.url_name == 'sport_detail' %}active{% endif %}">Sports</a>
+                    <a href="{% url 'activities_page' %}" class="{% if request.resolver_match.url_name == 'activities_page' or request.resolver_match.url_name == 'activity_detail' %}active{% endif %}">Activities</a>
+                    <a href="{% url 'ipl_page' %}" class="{% if request.resolver_match.url_name == 'ipl_page' %}active{% endif %}">TATA IPL 2026</a>
+                </nav>
 
-                {% if user.is_authenticated %}
-                    <div class="user-greeting">Hi, {{ user.username }}</div>
-                    <a href="{% url 'my_bookings' %}" class="header-btn">My Bookings</a>
-
-                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="header-btn">Logout</button>
-                    </form>
-                {% else %}
-                    <a href="{% url 'login' %}" class="signin-btn">Sign in</a>
-                {% endif %}
+                <nav class="bms-secondary-nav">
+                    <a href="#">ListYourShow</a>
+                    <a href="#">Corporates</a>
+                    <a href="#">Offers</a>
+                    <a href="#">Gift Cards</a>
+                </nav>
             </div>
         </div>
     </header>
 
-    <nav class="main-subnav">
-        <div class="layout-container subnav-inner">
-            <div class="subnav-left">
-                <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'movie_list' %}">Movies</a>
-                <a href="{% url 'events_page' %}">Events</a>
-                <a href="{% url 'concerts_page' %}">Concerts</a>
-                <a href="{% url 'matches_page' %}">Matches</a>
-            </div>
-
-            <div class="subnav-right">
-                <a href="{% url 'list_your_show' %}">ListYourShow</a>
-                <a href="#">Corporates</a>
-                <a href="#">Offers</a>
-                <a href="#">Gift Cards</a>
-            </div>
-        </div>
-    </nav>
-
-    <main class="page-content">
+    <main class="site-content">
         {% block content %}{% endblock %}
     </main>
 
     <script>
-        function toggleReplyForm(formId) {
-            const form = document.getElementById(formId);
-            if (form) {
-                form.classList.toggle("show-reply-form");
+        document.addEventListener("DOMContentLoaded", function () {
+            const dropdown = document.getElementById("locationDropdown");
+            if (dropdown) {
+                const trigger = dropdown.querySelector(".location-trigger");
+                trigger.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    dropdown.classList.toggle("open");
+                });
+
+                document.addEventListener("click", function (e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove("open");
+                    }
+                });
             }
-        }
+
+            document.querySelectorAll("[data-carousel]").forEach(function (wrapper) {
+                const track = wrapper.querySelector(".bms-carousel-track");
+                const prevBtn = wrapper.querySelector(".carousel-prev");
+                const nextBtn = wrapper.querySelector(".carousel-next");
+
+                if (prevBtn) {
+                    prevBtn.addEventListener("click", function () {
+                        track.scrollBy({ left: -900, behavior: "smooth" });
+                    });
+                }
+
+                if (nextBtn) {
+                    nextBtn.addEventListener("click", function () {
+                        track.scrollBy({ left: 900, behavior: "smooth" });
+                    });
+                }
+            });
+
+            const heroTrack = document.querySelector(".hero-track");
+            const heroSlides = document.querySelectorAll(".hero-slide");
+            const dots = document.querySelectorAll(".hero-dot");
+            const prevHero = document.querySelector(".hero-prev");
+            const nextHero = document.querySelector(".hero-next");
+
+            let currentHero = 0;
+            let heroInterval = null;
+
+            function updateHero(index) {
+                if (!heroTrack || !heroSlides.length) return;
+                currentHero = index;
+                heroTrack.style.transform = `translateX(-${index * 100}%)`;
+
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle("active", i === index);
+                });
+            }
+
+            function nextHeroSlide() {
+                if (!heroSlides.length) return;
+                currentHero = (currentHero + 1) % heroSlides.length;
+                updateHero(currentHero);
+            }
+
+            function prevHeroSlide() {
+                if (!heroSlides.length) return;
+                currentHero = (currentHero - 1 + heroSlides.length) % heroSlides.length;
+                updateHero(currentHero);
+            }
+
+            if (nextHero) nextHero.addEventListener("click", nextHeroSlide);
+            if (prevHero) prevHero.addEventListener("click", prevHeroSlide);
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener("click", function () {
+                    updateHero(index);
+                });
+            });
+
+            if (heroSlides.length) {
+                heroInterval = setInterval(nextHeroSlide, 4000);
+            }
+        });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const openCityModal = document.getElementById("openCityModal");
+    const closeCityModal = document.getElementById("closeCityModal");
+    const cityModal = document.getElementById("cityModal");
+
+    if (openCityModal && cityModal) {
+        openCityModal.addEventListener("click", function () {
+            cityModal.classList.add("show");
+        });
+    }
+
+    if (closeCityModal && cityModal) {
+        closeCityModal.addEventListener("click", function () {
+            cityModal.classList.remove("show");
+        });
+    }
+
+    if (cityModal) {
+        cityModal.addEventListener("click", function (e) {
+            if (e.target === cityModal) {
+                cityModal.classList.remove("show");
+            }
+        });
+    }
+});
     </script>
+
+<div class="city-modal-overlay" id="cityModal">
+    <div class="city-modal">
+        <div class="city-modal-header">
+            <input
+                type="text"
+                placeholder="Search for your city"
+                class="city-search-input"
+                id="citySearchInput"
+            >
+        </div>
+
+        <div class="city-detect-row" id="detectLocationBtn">
+            <span>Detect my location</span>
+        </div>
+
+        <div class="city-popular-title">Popular Cities</div>
+
+        <div class="city-grid-form" id="popularCityGrid">
+            {% for loc in popular_cities %}
+                <button type="button" class="city-card-btn city-select-btn" data-city="{{ loc }}">
+                    <img src="{% static 'images/cities/'|add:loc|lower|add:'.png' %}">            <span>{{ loc }}</span>
+                </button>
+            {% endfor %}
+        </div>
+        <div class="city-search-results" id="citySearchResults" style="display:none;"></div>
+        <div class="city-no-results" id="cityNoResults" style="display:none;">
+            No results found
+        </div>
+
+        <button type="button" class="city-close-btn" id="closeCityModal">Close</button>
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const openCityModal = document.getElementById("openCityModal");
+    const closeCityModal = document.getElementById("closeCityModal");
+    const cityModal = document.getElementById("cityModal");
+    const citySearchInput = document.getElementById("citySearchInput");
+    const cityButtons = document.querySelectorAll(".city-select-btn");
+    const cityNoResults = document.getElementById("cityNoResults");
+    const detectLocationBtn = document.getElementById("detectLocationBtn");
+    const popularCityGrid = document.getElementById("popularCityGrid");
+    const citySearchResults = document.getElementById("citySearchResults");
+
+    const availableCities = [
+        {% for city in available_cities %}
+            "{{ city|escapejs }}",
+        {% endfor %}
+    ];
+
+    function goToCity(city) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("location", city);
+        window.location.href = url.toString();
+    }
+
+    if (openCityModal && cityModal) {
+        openCityModal.addEventListener("click", function () {
+            cityModal.classList.add("show");
+        });
+    }
+
+    if (closeCityModal && cityModal) {
+        closeCityModal.addEventListener("click", function () {
+            cityModal.classList.remove("show");
+        });
+    }
+
+    if (cityModal) {
+        cityModal.addEventListener("click", function (e) {
+            if (e.target === cityModal) {
+                cityModal.classList.remove("show");
+            }
+        });
+    }
+
+    cityButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            const city = btn.getAttribute("data-city");
+            goToCity(city);
+        });
+    });
+
+    if (citySearchInput) {
+        citySearchInput.addEventListener("input", function () {
+            const query = citySearchInput.value.trim().toLowerCase();
+
+            if (!query) {
+                popularCityGrid.style.display = "grid";
+                citySearchResults.style.display = "none";
+                cityNoResults.style.display = "none";
+                citySearchResults.innerHTML = "";
+                return;
+            }
+
+            const matches = availableCities.filter(city =>
+                city.toLowerCase().includes(query)
+            );
+
+            popularCityGrid.style.display = "none";
+            citySearchResults.style.display = "grid";
+            citySearchResults.innerHTML = "";
+
+            if (matches.length === 0) {
+                citySearchResults.style.display = "none";
+                cityNoResults.style.display = "block";
+                return;
+            }
+
+            cityNoResults.style.display = "none";
+
+            matches.forEach(function (city) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "city-card-btn";
+                btn.innerHTML = `
+                    <img src="/static/images/cities/city-icon.png" alt="${city}">
+                    <span>${city}</span>
+                `;
+                btn.addEventListener("click", function () {
+                    goToCity(city);
+                });
+                citySearchResults.appendChild(btn);
+            });
+        });
+    }
+
+    if (detectLocationBtn) {
+        detectLocationBtn.addEventListener("click", function () {
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported in this browser.");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async function (position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    try {
+                        const response = await fetch(
+                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+                        );
+                        const data = await response.json();
+
+                        const address = data.address || {};
+                        const detectedCity =
+                            address.city ||
+                            address.town ||
+                            address.village ||
+                            address.state_district ||
+                            address.state ||
+                            "";
+
+                        if (!detectedCity) {
+                            alert("Could not detect city.");
+                            return;
+                        }
+
+                        const matchedCity = availableCities.find(city =>
+                            city.toLowerCase() === detectedCity.toLowerCase()
+                        );
+
+                        if (matchedCity) {
+                            goToCity(matchedCity);
+                        } else {
+                            alert("No results found for detected city.");
+                        }
+                    } catch (error) {
+                        alert("Unable to detect location.");
+                    }
+                },
+                function () {
+                    alert("Location access denied.");
+                }
+            );
+        });
+    }
+
+    document.querySelectorAll("[data-carousel]").forEach(function (wrapper) {
+        const track = wrapper.querySelector(".bms-carousel-track");
+        const prevBtn = wrapper.querySelector(".carousel-prev");
+        const nextBtn = wrapper.querySelector(".carousel-next");
+
+        if (prevBtn && track) {
+            prevBtn.addEventListener("click", function () {
+                track.scrollBy({ left: -900, behavior: "smooth" });
+            });
+        }
+
+        if (nextBtn && track) {
+            nextBtn.addEventListener("click", function () {
+                track.scrollBy({ left: 900, behavior: "smooth" });
+            });
+        }
+    });
+
+    const heroTrack = document.querySelector(".hero-track");
+    const heroSlides = document.querySelectorAll(".hero-slide");
+    const dots = document.querySelectorAll(".hero-dot");
+    const prevHero = document.querySelector(".hero-prev");
+    const nextHero = document.querySelector(".hero-next");
+
+    let currentHero = 0;
+
+    function updateHero(index) {
+        if (!heroTrack || !heroSlides.length) return;
+        currentHero = index;
+        heroTrack.style.transform = `translateX(-${index * 100}%)`;
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+    }
+
+    function nextHeroSlide() {
+        if (!heroSlides.length) return;
+        currentHero = (currentHero + 1) % heroSlides.length;
+        updateHero(currentHero);
+    }
+
+    function prevHeroSlide() {
+        if (!heroSlides.length) return;
+        currentHero = (currentHero - 1 + heroSlides.length) % heroSlides.length;
+        updateHero(currentHero);
+    }
+
+    if (nextHero) nextHero.addEventListener("click", nextHeroSlide);
+    if (prevHero) prevHero.addEventListener("click", prevHeroSlide);
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener("click", function () {
+            updateHero(index);
+        });
+    });
+
+    if (heroSlides.length) {
+        setInterval(nextHeroSlide, 4000);
+    }
+});
+</script>
 </body>
 </html>

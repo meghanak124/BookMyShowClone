@@ -1,58 +1,85 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
-from .models import Movie, Theatre, Show
+
+from .models import Movie, Show, Theatre
 
 
 def movie_list(request):
     movies = Movie.objects.all()
 
     query = request.GET.get("q", "").strip()
+    selected_location = request.GET.get("location", "").strip()
+    if selected_location:
+        request.session["selected_location"] = selected_location
+    else:
+        selected_location = request.session.get("selected_location", "Hyderabad")
     selected_languages = request.GET.getlist("language")
     selected_genres = request.GET.getlist("genre")
+    selected_formats = request.GET.getlist("format")
+
+    if selected_location:
+        request.session["selected_location"] = selected_location
 
     if query:
         movies = movies.filter(title__icontains=query)
 
+    if selected_location:
+        movie_ids = Show.objects.filter(
+            theatre__location__icontains=selected_location
+        ).values_list("movie_id", flat=True).distinct()
+        movies = movies.filter(id__in=movie_ids)
+
     if selected_languages:
         filtered_ids = []
         for movie in movies:
-            movie_languages = movie.language.split()
-            if any(lang in movie_languages for lang in selected_languages):
+            langs = [lang.strip() for lang in movie.language.split(",")]
+            if any(lang in langs for lang in selected_languages):
                 filtered_ids.append(movie.id)
         movies = movies.filter(id__in=filtered_ids)
 
     if selected_genres:
         filtered_ids = []
         for movie in movies:
-            movie_genres = movie.genre.split()
-            if any(genre in movie_genres for genre in selected_genres):
+            genres = [genre.strip() for genre in movie.genre.split(",")]
+            if any(genre in genres for genre in selected_genres):
                 filtered_ids.append(movie.id)
         movies = movies.filter(id__in=filtered_ids)
 
-    all_languages_raw = Movie.objects.values_list("language", flat=True)
-    language_set = set()
-    for value in all_languages_raw:
-        if value:
-            for lang in value.split():
-                language_set.add(lang.strip())
+    if selected_formats:
+        filtered_ids = []
+        for movie in movies:
+            formats = [fmt.strip() for fmt in (movie.format or "").split(",") if fmt.strip()]
+            if any(fmt in formats for fmt in selected_formats):
+                filtered_ids.append(movie.id)
+        movies = movies.filter(id__in=filtered_ids)
 
-    all_genres_raw = Movie.objects.values_list("genre", flat=True)
-    genre_set = set()
-    for value in all_genres_raw:
-        if value:
-            for genre in value.split():
-                genre_set.add(genre.strip())
+    all_languages = set()
+    all_genres = set()
+    all_formats = set()
 
-    suggestions = Movie.objects.exclude(id__in=movies.values_list("id", flat=True))[:5]
+    for movie in Movie.objects.all():
+        for lang in movie.language.split(","):
+            if lang.strip():
+                all_languages.add(lang.strip())
+
+        for genre in movie.genre.split(","):
+            if genre.strip():
+                all_genres.add(genre.strip())
+
+        for fmt in (movie.format or "").split(","):
+            if fmt.strip():
+                all_formats.add(fmt.strip())
 
     context = {
         "movies": movies.distinct(),
-        "all_languages": sorted(language_set),
-        "all_genres": sorted(genre_set),
+        "all_languages": sorted(all_languages),
+        "all_genres": sorted(all_genres),
+        "all_formats": sorted(all_formats),
+        "selected_location": selected_location,
         "selected_languages": selected_languages,
         "selected_genres": selected_genres,
+        "selected_formats": selected_formats,
         "query": query,
-        "suggestions": suggestions,
     }
     return render(request, "movies/movie_list.html", context)
 
@@ -72,42 +99,55 @@ def movie_detail(request, movie_id):
     user_liked_reviews = set()
     if request.user.is_authenticated:
         user_liked_reviews = set(
-            request.user.like_set.filter(review__movie=movie).values_list("review_id", flat=True)
+            request.user.like_set.filter(review__movie=movie).values_list(
+                "review_id", flat=True
+            )
         )
 
     recommended_movies = Movie.objects.exclude(id=movie.id)[:5]
 
-    return render(request, "movies/movie_detail.html", {
-        "movie": movie,
-        "shows": shows,
-        "reviews": reviews,
-        "comments": comments,
-        "user_liked_reviews": user_liked_reviews,
-        "now": now,
-        "recommended_movies": recommended_movies,
-    })
+    return render(
+        request,
+        "movies/movie_detail.html",
+        {
+            "movie": movie,
+            "shows": shows,
+            "reviews": reviews,
+            "comments": comments,
+            "user_liked_reviews": user_liked_reviews,
+            "now": now,
+            "recommended_movies": recommended_movies,
+        },
+    )
+
 
 def browse_cinemas(request):
     now = timezone.localtime()
 
-    theatres = Theatre.objects.filter(
-        shows__show_time__gt=now
-    ).distinct()
+    theatres = Theatre.objects.filter(shows__show_time__gt=now).distinct()
 
     theatre_data = []
     for theatre in theatres:
-        active_shows = Show.objects.filter(
-            theatre=theatre,
-            show_time__gt=now,
-            available_seats__gt=0
-        ).select_related("movie").order_by("show_time")
+        active_shows = (
+            Show.objects.filter(
+                theatre=theatre, show_time__gt=now, available_seats__gt=0
+            )
+            .select_related("movie")
+            .order_by("show_time")
+        )
 
         if active_shows.exists():
-            theatre_data.append({
-                "theatre": theatre,
-                "shows": active_shows,
-            })
+            theatre_data.append(
+                {
+                    "theatre": theatre,
+                    "shows": active_shows,
+                }
+            )
 
-    return render(request, "movies/browse_cinemas.html", {
-        "theatre_data": theatre_data,
-    })
+    return render(
+        request,
+        "movies/browse_cinemas.html",
+        {
+            "theatre_data": theatre_data,
+        },
+    )
