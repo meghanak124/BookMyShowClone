@@ -1,70 +1,153 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<section class="booking-section">
-    <div class="booking-card">
-        <h1>Select Seats</h1>
+<div class="seat-page">
+    <div class="seat-shell">
+        <div class="seat-header-card">
+            <div class="seat-header-left">
+                <p class="seat-page-kicker">Movie Booking</p>
+                <h1 class="seat-page-title">Select Your Seats</h1>
 
-        <div class="booking-info">
-            <p><strong>Movie:</strong> {{ show.movie.title }}</p>
-            <p><strong>Theatre:</strong> {{ show.theatre.name }}</p>
-            <p><strong>Location:</strong> {{ show.theatre.location }}</p>
-            <p><strong>Time:</strong> {{ show.show_time }}</p>
-            <p><strong>Available Seats:</strong> {{ show.available_seats }}</p>
-        </div>
+                <div class="seat-movie-meta">
+                    <div class="seat-meta-pill">
+                        <span class="seat-meta-label">Movie</span>
+                        <span class="seat-meta-value">{{ show.movie.title }}</span>
+                    </div>
 
-        <div class="screen-preview">SCREEN THIS WAY</div>
+                    <div class="seat-meta-pill">
+                        <span class="seat-meta-label">Theatre</span>
+                        <span class="seat-meta-value">{{ show.theatre.name }}</span>
+                    </div>
 
-        {% if error %}
-            <p class="form-error">{{ error }}</p>
-        {% endif %}
+                    <div class="seat-meta-pill">
+                        <span class="seat-meta-label">Location</span>
+                        <span class="seat-meta-value">{{ show.theatre.location }}</span>
+                    </div>
 
-        <form method="post" id="seat-booking-form">
-            {% csrf_token %}
-            <input type="hidden" name="selected_seats" id="selected_seats">
-
-            <div class="seat-grid" style="grid-template-columns: repeat({{ show.theatre.columns }}, 1fr);">
-                {% for seat in all_seats %}
-                    <button
-                        type="button"
-                        class="seat-btn {% if seat in booked_seats %}booked-seat{% else %}available-seat{% endif %}"
-                        data-seat="{{ seat }}"
-                        {% if seat in booked_seats %}disabled{% endif %}
-                    >
-                        {{ seat }}
-                    </button>
-                {% endfor %}
+                    <div class="seat-meta-pill">
+                        <span class="seat-meta-label">Show Time</span>
+                        <span class="seat-meta-value">{{ show.show_time|date:"M d, Y • h:i A" }}</span>
+                    </div>
+                </div>
             </div>
 
-            <p><strong>Selected Seats:</strong> <span id="selected-seat-display">None</span></p>
+            <div class="seat-header-right">
+                <div class="seat-stat-card">
+                    <span class="seat-stat-number">{{ show.available_seats }}</span>
+                    <span class="seat-stat-label">Available Seats</span>
+                </div>
+            </div>
+        </div>
 
-            <button type="submit" class="book-btn">Confirm Booking</button>
+        <form method="post" class="seat-booking-layout">
+            {% csrf_token %}
+
+            <div class="seat-map-card">
+                <div class="screen-banner">
+                    <span>SCREEN THIS WAY</span>
+                </div>
+
+                <div class="seat-legend">
+                    <div class="seat-legend-item">
+                        <span class="seat-legend-box seat-legend-available"></span>
+                        <span>Available</span>
+                    </div>
+                    <div class="seat-legend-item">
+                        <span class="seat-legend-box seat-legend-selected"></span>
+                        <span>Selected</span>
+                    </div>
+                    <div class="seat-legend-item">
+                        <span class="seat-legend-box seat-legend-booked"></span>
+                        <span>Booked</span>
+                    </div>
+                </div>
+
+                <div class="seat-grid-wrap">
+                    <div
+                        class="seat-grid"
+                        style="grid-template-columns: repeat({{ show.theatre.cols }}, minmax(64px, 1fr));"
+                    >
+                        {% for seat in all_seats %}
+                            {% if seat in booked_seats %}
+                                <button type="button" class="seat-btn seat-btn-booked" disabled>
+                                    {{ seat }}
+                                </button>
+                            {% else %}
+                                <label class="seat-choice">
+                                    <input
+                                        type="checkbox"
+                                        name="selected_seats"
+                                        value="{{ seat }}"
+                                        class="seat-checkbox"
+                                    >
+                                    <span class="seat-btn seat-btn-available">{{ seat }}</span>
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <aside class="seat-summary-card">
+                <div class="seat-summary-top">
+                    <h2>Booking Summary</h2>
+                    <p>Choose your seats and confirm your booking.</p>
+                </div>
+
+                <div class="seat-summary-block">
+                    <span class="summary-block-label">Selected Seats</span>
+                    <div id="selectedSeatsText" class="summary-block-value">None</div>
+                </div>
+
+                <div class="seat-summary-block">
+                    <span class="summary-block-label">Seats Count</span>
+                    <div id="selectedSeatsCount" class="summary-block-value">0</div>
+                </div>
+
+                <div class="seat-summary-info">
+                    <div class="seat-summary-row">
+                        <span>Movie</span>
+                        <span>{{ show.movie.title }}</span>
+                    </div>
+                    <div class="seat-summary-row">
+                        <span>Theatre</span>
+                        <span>{{ show.theatre.name }}</span>
+                    </div>
+                    <div class="seat-summary-row">
+                        <span>Time</span>
+                        <span>{{ show.show_time|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="seat-confirm-btn">
+                    Confirm Booking
+                </button>
+            </aside>
         </form>
     </div>
-</section>
+</div>
 
 <script>
-    const seatButtons = document.querySelectorAll(".available-seat");
-    const selectedSeatInput = document.getElementById("selected_seats");
-    const selectedSeatDisplay = document.getElementById("selected-seat-display");
-    const selectedSeats = [];
+    document.addEventListener("DOMContentLoaded", function () {
+        const checkboxes = document.querySelectorAll(".seat-checkbox");
+        const selectedSeatsText = document.getElementById("selectedSeatsText");
+        const selectedSeatsCount = document.getElementById("selectedSeatsCount");
 
-    seatButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            const seat = this.dataset.seat;
-            const index = selectedSeats.indexOf(seat);
+        function updateSeatSummary() {
+            const selected = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
 
-            if (index > -1) {
-                selectedSeats.splice(index, 1);
-                this.classList.remove("selected-seat");
-            } else {
-                selectedSeats.push(seat);
-                this.classList.add("selected-seat");
-            }
+            selectedSeatsText.textContent = selected.length ? selected.join(", ") : "None";
+            selectedSeatsCount.textContent = selected.length;
+        }
 
-            selectedSeatInput.value = selectedSeats.join(",");
-            selectedSeatDisplay.textContent = selectedSeats.length ? selectedSeats.join(", ") : "None";
+        checkboxes.forEach(cb => {
+            cb.addEventListener("change", updateSeatSummary);
         });
+
+        updateSeatSummary();
     });
 </script>
 {% endblock %}

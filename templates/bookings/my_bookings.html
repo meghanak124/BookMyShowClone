@@ -1,26 +1,104 @@
-{% extends "base.html" %} {% block content %}
-<section class="my-bookings-section">
-    <h1>My Bookings</h1>
+{% extends "base.html" %}
+{% load static %}
 
-    {% if bookings %}
-    <div class="booking-list">
-        {% for booking in bookings %}
-        <div class="booking-item">
-            <h3>{{ booking.show.movie.title }}</h3>
-            <p><strong>Theatre:</strong> {{ booking.show.theatre.name }}</p>
-            <p><strong>Time:</strong> {{ booking.show.show_time }}</p>
-            <p><strong>Seats Booked:</strong> {{ booking.seats_booked }}</p>
-            <p><strong>Selected Seats:</strong> {{ booking.selected_seats }}</p>
-            <p><strong>Status:</strong> {{ booking.status }}</p>
-            <form method="post" action="{% url 'delete_booking' booking.id %}">
-                {% csrf_token %}
-                <button type="submit" class="delete-btn">Cancel Booking</button>
-            </form>
+{% block content %}
+<div class="bookings-page">
+    <div class="bookings-shell">
+        <div class="bookings-header">
+            <div class="bookings-header-left">
+                <p class="bookings-eyebrow">Your Dashboard</p>
+                <h1 class="bookings-title">My Bookings</h1>
+                <p class="bookings-subtitle">
+                    Track your upcoming movie plans and manage them easily.
+                </p>
+            </div>
+
+            <div class="bookings-summary-card">
+                <span class="summary-count">{{ bookings|length }}</span>
+                <span class="summary-label">Total Bookings</span>
+            </div>
         </div>
-        {% endfor %}
+
+        {% if bookings %}
+            <div class="bookings-list">
+                {% for booking in bookings %}
+                    <div class="booking-card">
+                        <div class="booking-card-top">
+                            <div class="booking-poster-wrap">
+                                {% if booking.show.movie.poster %}
+                                    <img src="{{ booking.show.movie.poster.url }}" alt="{{ booking.show.movie.title }}" class="booking-poster">
+                                {% else %}
+                                    <div class="booking-poster booking-poster-placeholder">No Image</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="booking-content">
+                                <div class="booking-top-row">
+                                    <div class="booking-title-wrap">
+                                        <div class="booking-tags">
+                                            <span class="booking-tag">Movie Booking</span>
+                                            <span class="booking-status booking-status--{{ booking.status|lower }}">
+                                                {{ booking.status|title }}
+                                            </span>
+                                        </div>
+                                        <h2 class="booking-movie-title">{{ booking.show.movie.title }}</h2>
+                                    </div>
+                                </div>
+
+                                <div class="booking-info-grid">
+                                    <div class="booking-info-box">
+                                        <span class="booking-info-label">Theatre</span>
+                                        <span class="booking-info-value">{{ booking.show.theatre.name }}</span>
+                                    </div>
+
+                                    <div class="booking-info-box">
+                                        <span class="booking-info-label">Location</span>
+                                        <span class="booking-info-value">{{ booking.show.theatre.location }}</span>
+                                    </div>
+
+                                    <div class="booking-info-box">
+                                        <span class="booking-info-label">Date & Time</span>
+                                        <span class="booking-info-value">{{ booking.show.show_time|date:"M d, Y • h:i A" }}</span>
+                                    </div>
+
+                                    <div class="booking-info-box">
+                                        <span class="booking-info-label">Seats Booked</span>
+                                        <span class="booking-info-value">{{ booking.seats_booked }}</span>
+                                    </div>
+
+                                    <div class="booking-info-box booking-info-box-full">
+                                        <span class="booking-info-label">Selected Seats</span>
+                                        <span class="booking-info-value">{{ booking.selected_seats }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="booking-footer">
+                                    <div class="booking-footer-text">
+                                        <span class="booking-confirmed-label">Booking Status</span>
+                                        <p>
+                                            Your booking is confirmed and saved successfully.
+                                        </p>
+                                    </div>
+
+                                    <div class="booking-actions">
+                                        <a href="{% url 'delete_booking' booking.id %}" class="booking-btn booking-btn-danger">
+                                            Cancel Booking
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="bookings-empty">
+                <div class="bookings-empty-icon">🎟️</div>
+                <h3>No bookings yet</h3>
+                <p>Looks like you have not booked any shows yet.</p>
+                <a href="{% url 'home' %}" class="booking-btn booking-btn-primary">Explore Movies</a>
+            </div>
+        {% endif %}
     </div>
-    {% else %}
-    <p>No upcoming bookings.</p>
-    {% endif %}
-</section>
+</div>
 {% endblock %}
