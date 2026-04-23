@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
+from collections import defaultdict
 
 from .models import Movie, Show, Theatre
 
@@ -123,24 +124,51 @@ def movie_detail(request, movie_id):
 
 def browse_cinemas(request):
     now = timezone.localtime()
+    selected_location = request.GET.get("location", "").strip()
 
     theatres = Theatre.objects.filter(shows__show_time__gt=now).distinct()
 
+    if selected_location:
+        theatres = theatres.filter(location__icontains=selected_location)
+
     theatre_data = []
-    for theatre in theatres:
+
+    for theatre in theatres.order_by("name"):
         active_shows = (
             Show.objects.filter(
-                theatre=theatre, show_time__gt=now, available_seats__gt=0
+                theatre=theatre,
+                show_time__gt=now,
             )
             .select_related("movie")
             .order_by("show_time")
         )
 
-        if active_shows.exists():
+        valid_shows = []
+        movie_count = set()
+
+        for show in active_shows:
+            try:
+                seats = int(show.available_seats or 0)
+            except (TypeError, ValueError):
+                seats = 0
+
+            if seats > 0:
+                show.available_seats_int = seats
+                valid_shows.append(show)
+                movie_count.add(show.movie_id)
+
+        if valid_shows:
+            grouped_shows = defaultdict(list)
+            for show in valid_shows:
+                grouped_shows[show.movie.title].append(show)
+
             theatre_data.append(
                 {
                     "theatre": theatre,
-                    "shows": active_shows,
+                    "shows": valid_shows,
+                    "grouped_shows": dict(grouped_shows),
+                    "shows_count": len(valid_shows),
+                    "movies_count": len(movie_count),
                 }
             )
 
@@ -149,5 +177,6 @@ def browse_cinemas(request):
         "movies/browse_cinemas.html",
         {
             "theatre_data": theatre_data,
+            "selected_location": selected_location or request.session.get("selected_location", "Hyderabad"),
         },
     )

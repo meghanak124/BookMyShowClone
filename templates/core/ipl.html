@@ -2,75 +2,186 @@
 {% load static %}
 
 {% block content %}
-<div class="ipl-page">
-    <div class="ipl-container">
-        <h1 class="ipl-title">{{ league.title }}</h1>
-
-        <div class="ipl-top-layout">
-            <div class="ipl-banner-column">
-                <img src="{{ league.image.url }}" alt="{{ league.title }}" class="ipl-main-banner">
-
-                <div class="ipl-meta-row">
-                    <span class="ipl-tag">{{ league.sport }}</span>
-                    <span class="ipl-interest">
-                        <i class="fa-solid fa-thumbs-up"></i> {{ league.interest_text }}
-                    </span>
-                    <button class="ipl-interest-btn">I'm Interested</button>
+<div class="ipl-page-pro">
+    <div class="ipl-shell">
+        <section class="ipl-hero-card single-column">
+            <div class="ipl-hero-left">
+                <div class="ipl-hero-text">
+                    <span class="ipl-eyebrow">{{ league.sport }}</span>
+                    <h1 class="ipl-hero-title">{{ league.title }}</h1>
+                    <p class="ipl-hero-subtitle">
+                        Experience the biggest cricket league with match fixtures, team lineups, venues, and instant booking updates.
+                    </p>
                 </div>
 
-                <div class="ipl-season-row">
-                    <i class="fa-regular fa-calendar"></i>
-                    <span>{{ league.season_text }}</span>
+                <div class="ipl-banner-wrap">
+                    <img src="{{ league.image.url }}" alt="{{ league.title }}" class="ipl-main-banner">
+                    <div class="ipl-banner-overlay"></div>
                 </div>
-            </div>
 
-            <div class="ipl-teams-card">
-                <h3>Teams ({{ teams|length }})</h3>
-                <div class="ipl-teams-grid">
-                    {% for team in teams %}
-                        <div class="ipl-team-box">
-                            <img src="{{ team.logo.url }}" alt="{{ team.name }}">
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+                <div class="ipl-meta-bar">
+                    <div class="ipl-meta-left">
+                        <span class="ipl-pill ipl-sport-pill">{{ league.sport }}</span>
+                        <span class="ipl-interest-pill">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                            {{ league.interest_text }}
+                        </span>
+                        <span class="ipl-season-pill">
+                            <i class="fa-regular fa-calendar"></i>
+                            {{ league.season_text }}
+                        </span>
+                    </div>
 
-        <h2 class="ipl-events-title">{{ events|length }} Events</h2>
-
-        <div class="ipl-events-list">
-            {% for event in events %}
-                <div class="ipl-event-date-group">
-                    <h3>{{ event.date_heading }} | {{ event.city }}</h3>
-
-                    <div class="ipl-match-card">
-                        <p class="match-number">{{ event.match_number }}</p>
-
-                        <div class="match-teams-row">
-                            <div class="team-block">
-                                <img src="{{ event.team_one_logo.url }}" alt="{{ event.team_one }}">
-                                <span>{{ event.team_one }}</span>
-                            </div>
-
-                            <div class="versus-pill">vs</div>
-
-                            <div class="team-block">
-                                <img src="{{ event.team_two_logo.url }}" alt="{{ event.team_two }}">
-                                <span>{{ event.team_two }}</span>
-                            </div>
-                        </div>
-
-                        <div class="match-venue-row">
-                            {{ event.time_text }} | {{ event.venue }}
-                        </div>
-
-                        <div class="match-book-row">
-                            {{ event.booking_text }} <i class="fa-solid fa-angle-right"></i>
-                        </div>
+                    <div class="ipl-meta-right">
+                        <button class="ipl-interest-btn-outline" id="interestToggleBtn" type="button">
+                            I'm Interested
+                        </button>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
+            </div>
+        </section>
+
+        <section class="ipl-teams-strip-section">
+            <div class="ipl-strip-head">
+                <h3>Teams</h3>
+                <span>{{ teams|length }}</span>
+            </div>
+
+            <div class="ipl-teams-strip">
+                {% for team in teams %}
+                    <div class="ipl-team-chip" title="{{ team.name }}">
+                        <div class="ipl-team-chip-logo">
+                            {% if team.logo %}
+                                <img src="/media/{{ team.logo }}.png" alt="{{ team.name }}">
+                            {% else %}
+                                <img src="{% static 'images/default-event.jpg' %}" alt="{{ team.name }}">
+                            {% endif %}
+                        </div>
+                        <p>{{ team.name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="ipl-events-section">
+            <div class="ipl-section-head">
+                <div>
+                    <p class="ipl-section-kicker">MATCH SCHEDULE</p>
+                    <h2>{{ events|length }} Events</h2>
+                </div>
+            </div>
+
+            <div class="ipl-events-timeline">
+                {% for event in events %}
+                    <div class="ipl-event-row">
+                        <div class="ipl-event-date-col">
+                            <div class="ipl-date-chip">
+                                <span class="ipl-date-main">{{ event.date_heading }}</span>
+                                <span class="ipl-date-city">{{ event.city }}</span>
+                            </div>
+                        </div>
+
+                        <div class="ipl-match-card-pro">
+                            <div class="ipl-match-top">
+                                <div class="ipl-match-copy">
+                                    <p class="ipl-match-number">{{ event.match_number }}</p>
+                                    <h3>{{ event.description }}</h3>
+                                </div>
+                                <div class="ipl-match-time">
+                                    {{ event.time_text }}
+                                </div>
+                            </div>
+
+                            <div class="ipl-match-center">
+                                <div class="ipl-team-side">
+                                    <div class="ipl-team-side-logo">
+                                        {% if event.team_one_logo %}
+                                            <img src="/media/{{ event.team_one_logo }}.png" alt="{{ event.team_one }}">
+                                        {% else %}
+                                            <img src="{% static 'images/default-event.jpg' %}" alt="{{ event.team_one }}">
+                                        {% endif %}
+                                    </div>
+                                    <div class="ipl-team-side-text">
+                                        <span class="ipl-team-label">Home</span>
+                                        <h4>{{ event.team_one }}</h4>
+                                    </div>
+                                </div>
+
+                                <div class="ipl-vs-core">
+                                    <span>VS</span>
+                                </div>
+
+                                <div class="ipl-team-side ipl-team-side-right">
+                                    <div class="ipl-team-side-text align-right">
+                                        <span class="ipl-team-label">Away</span>
+                                        <h4>{{ event.team_two }}</h4>
+                                    </div>
+                                    <div class="ipl-team-side-logo">
+                                        {% if event.team_two_logo %}
+                                            <img src="/media/{{ event.team_two_logo }}.png" alt="{{ event.team_two }}">
+                                        {% else %}
+                                            <img src="{% static 'images/default-event.jpg' %}" alt="{{ event.team_two }}">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ipl-match-bottom">
+                                <div class="ipl-venue-block">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span>{{ event.venue }}</span>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="ipl-book-btn-toggle"
+                                    data-book-toggle
+                                >
+                                    <span class="book-btn-text">Book Now</span>
+                                    <i class="fa-solid fa-angle-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="ipl-empty-state">
+                        <h3>No IPL matches available</h3>
+                        <p>Add league events to start showing the fixture list.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const interestBtn = document.getElementById("interestToggleBtn");
+
+    if (interestBtn) {
+        interestBtn.addEventListener("click", function () {
+            this.classList.toggle("active");
+        });
+    }
+
+    const bookButtons = document.querySelectorAll("[data-book-toggle]");
+
+    bookButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            const textEl = this.querySelector(".book-btn-text");
+            const iconEl = this.querySelector("i");
+
+            this.classList.toggle("booked");
+
+            if (this.classList.contains("booked")) {
+                textEl.textContent = "Booked";
+                iconEl.className = "fa-solid fa-check";
+            } else {
+                textEl.textContent = "Book Now";
+                iconEl.className = "fa-solid fa-angle-right";
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

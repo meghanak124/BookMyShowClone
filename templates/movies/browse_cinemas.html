@@ -1,46 +1,145 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="browse-cinema-wrapper">
-    <h1>Browse by Cinemas</h1>
+<section class="browse-cinema-page">
+    <div class="browse-cinema-wrapper">
+        <div class="browse-cinema-header">
+            <p class="browse-cinema-kicker">CINEMAS</p>
+            <h1 class="browse-cinema-title">Browse Cinemas</h1>
+            <p class="browse-cinema-subtitle">
+                Explore theatres in {{ selected_location|default:"your city" }}.
+                Click any theatre to view all available shows and book tickets instantly.
+            </p>
+        </div>
 
-    {% if theatre_data %}
-        <div class="cinema-list">
-            {% for item in theatre_data %}
-                <div class="cinema-card">
-                    <h2>{{ item.theatre.name }}</h2>
-                    <p class="cinema-location">{{ item.theatre.location }}</p>
-
-                    <div class="cinema-show-list">
-                        {% for show in item.shows %}
-                            <div class="cinema-show-item">
-                                <div>
-                                    <h3>{{ show.movie.title }}</h3>
-                                    <p>{{ show.show_time }}</p>
-                                    <p>Available Seats: {{ show.available_seats }}</p>
+        {% if theatre_data %}
+            <div class="cinema-list cinema-accordion">
+                {% for item in theatre_data %}
+                    <div class="cinema-card cinema-accordion-item">
+                        <button
+                            class="cinema-card-toggle"
+                            type="button"
+                            data-cinema-toggle
+                            data-target="cinema-panel-{{ forloop.counter }}"
+                            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                        >
+                            <div class="cinema-card-main">
+                                <div class="cinema-card-title-wrap">
+                                    <h2>{{ item.theatre.name }}</h2>
+                                    <p class="cinema-location">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        {{ item.theatre.location }}
+                                    </p>
                                 </div>
 
-                                {% now "U" as current_time %}
-                                    {% if show.show_time|date:"U" > current_time %}
-                                        <a href="{% url 'select_seats' show.id %}" class="book-btn">
-                                            Book Tickets
-                                        </a>
-                                    {% else %}
-                                        <button class="book-btn disabled-btn" disabled>
-                                            Booking Closed
-                                        </button>
-                                    {% endif %}
+                                <div class="cinema-card-stats">
+                                    <span class="cinema-badge">
+                                        {{ item.movies_count }} movie{{ item.movies_count|pluralize }}
+                                    </span>
+                                    <span class="cinema-badge cinema-badge-soft">
+                                        {{ item.shows_count }} show{{ item.shows_count|pluralize }}
+                                    </span>
+                                </div>
                             </div>
-                        {% endfor %}
+
+                            <span class="cinema-toggle-icon">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </span>
+                        </button>
+
+                        <div
+                            id="cinema-panel-{{ forloop.counter }}"
+                            class="cinema-panel {% if forloop.first %}open{% endif %}"
+                        >
+                            <div class="cinema-show-groups">
+                                {% for movie_title, shows in item.grouped_shows.items %}
+                                    <div class="cinema-show-group">
+                                        <div class="cinema-show-group-head">
+                                            <h3 class="cinema-movie-name">{{ movie_title }}</h3>
+                                            <p class="cinema-show-group-sub">
+                                                {{ shows|length }} show{{ shows|length|pluralize }} available
+                                            </p>
+                                        </div>
+
+                                        <div class="cinema-time-grid">
+                                            {% for show in shows %}
+                                                <div class="cinema-time-card">
+                                                    <div class="cinema-time-card-top">
+                                                        <span class="show-date">
+                                                            {{ show.show_time|date:"D, M j" }}
+                                                        </span>
+                                                        <span class="show-seats">
+                                                            {{ show.available_seats_int }} seats left
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="cinema-time-card-middle">
+                                                        <span class="show-time">
+                                                            {{ show.show_time|date:"g:i A" }}
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="cinema-time-card-bottom">
+                                                        <a href="{% url 'book_show' show.id %}" class="cinema-book-btn">
+                                                            Book Tickets
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>No active shows available right now.</p>
-    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="browse-cinema-empty">
+                <h3>No cinemas available right now</h3>
+                <p>Try switching the city or add more upcoming shows for your theatres.</p>
+            </div>
+        {% endif %}
+    </div>
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleButtons = document.querySelectorAll("[data-cinema-toggle]");
+
+    toggleButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            const targetId = this.getAttribute("data-target");
+            const panel = document.getElementById(targetId);
+            const icon = this.querySelector(".cinema-toggle-icon i");
+            const isOpen = panel.classList.contains("open");
+
+            document.querySelectorAll(".cinema-panel").forEach((item) => {
+                item.classList.remove("open");
+            });
+
+            document.querySelectorAll("[data-cinema-toggle]").forEach((btn) => {
+                btn.setAttribute("aria-expanded", "false");
+                const btnIcon = btn.querySelector(".cinema-toggle-icon i");
+                if (btnIcon) {
+                    btnIcon.style.transform = "rotate(0deg)";
+                }
+            });
+
+            if (!isOpen) {
+                panel.classList.add("open");
+                this.setAttribute("aria-expanded", "true");
+                if (icon) {
+                    icon.style.transform = "rotate(180deg)";
+                }
+            }
+        });
+    });
+
+    const firstOpenButton = document.querySelector('[data-cinema-toggle][aria-expanded="true"] .cinema-toggle-icon i');
+    if (firstOpenButton) {
+        firstOpenButton.style.transform = "rotate(180deg)";
+    }
+});
+</script>
 {% endblock %}
-
-
-

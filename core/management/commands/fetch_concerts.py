@@ -1,15 +1,18 @@
 """
-Fetches music concerts in India from the Ticketmaster Discovery API
-and populates the Event model (category = "Music" or "Concerts").
+Fetches music concerts & events in India from Eventbrite API
+and saves them to the Event model.
+
+Eventbrite actually has Indian events unlike Ticketmaster.
 
 Usage:
     python manage.py fetch_concerts
     python manage.py fetch_concerts --city Mumbai
-    python manage.py fetch_concerts --city Bengaluru --pages 2
+    python manage.py fetch_concerts --pages 5
 
-Get a FREE API key at: https://developer.ticketmaster.com/
-  → Sign up → My Apps → Create App → copy "Consumer Key"
-Add to .env:  TICKETMASTER_KEY=your_key_here
+Get a FREE token at: https://www.eventbrite.com/platform/api
+  → Sign in → Account Settings → Developer Links → API Keys
+  → Create API Key → copy the "Private Token"
+Add to .env:  EVENTBRITE_TOKEN=your_token_here
 """
 
 import io
@@ -23,145 +26,160 @@ from django.utils import timezone
 
 from core.models import Event
 
+EVENTBRITE_BASE = "https://www.eventbriteapi.com/v3"
 
-TICKETMASTER_BASE = "https://app.ticketmaster.com/discovery/v2"
-
-# Indian cities Ticketmaster recognises
+# Indian cities with their Eventbrite location search terms
 INDIA_CITIES = [
-    "Mumbai", "Delhi", "Bengaluru", "Hyderabad",
-    "Chennai", "Kolkata", "Pune", "Ahmedabad",
+    "Mumbai, India",
+    "Delhi, India",
+    "Bengaluru, India",
+    "Hyderabad, India",
+    "Chennai, India",
+    "Kolkata, India",
+    "Pune, India",
+    "Ahmedabad, India",
 ]
+
+# Eventbrite music category ID = 103
+# Arts = 105, Film = 104, Food = 110, Sports = 108
+CATEGORY_MAP = {
+    "103": "Music",
+    "105": "Arts & Theatre",
+    "104": "Film",
+    "108": "Sports & Fitness",
+    "110": "Food & Drink",
+    "113": "Community",
+    "101": "Business",
+    "102": "Science & Technology",
+}
 
 
 class Command(BaseCommand):
-    help = "Fetch music concerts in India from Ticketmaster and save to Event model"
+    help = "Fetch concerts & events in India from Eventbrite → Event model"
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--city",
-            type=str,
-            default=None,
-            help="City to search concerts in (default: all major Indian cities)",
-        )
-        parser.add_argument(
-            "--pages",
-            type=int,
-            default=1,
-            help="Pages to fetch per city (default: 1, ~20 events per page)",
-        )
+        parser.add_argument("--city", type=str, default=None,
+                            help="City to search (default: all major Indian cities)")
+        parser.add_argument("--pages", type=int, default=3,
+                            help="Pages to fetch per city (default: 3, ~50 events per page)")
+        parser.add_argument("--category", type=str, default="103",
+                            help="Eventbrite category ID (103=Music, 105=Arts, 108=Sports). Default: 103")
 
     def handle(self, *args, **options):
-        api_key = os.environ.get("TICKETMASTER_KEY")
-        if not api_key:
+        token = os.environ.get("EVENTBRITE_TOKEN")
+        if not token:
             raise CommandError(
-                "\n\n  ❌  TICKETMASTER_KEY is not set in your .env file.\n"
-                "  Get a free key at: https://developer.ticketmaster.com/\n"
-                "  Then add:  TICKETMASTER_KEY=your_key_here\n"
+                "\n\n  ❌  EVENTBRITE_TOKEN is not set in your .env file.\n"
+                "  Get a free token at: https://www.eventbrite.com/platform/api\n"
+                "  → Sign in → Account Settings → Developer Links → API Keys\n"
+                "  Then add:  EVENTBRITE_TOKEN=your_private_token_here\n"
             )
 
-        cities = [options["city"]] if options["city"] else INDIA_CITIES
+        cities = [options["city"] + ", India"] if options["city"] else INDIA_CITIES
         total_pages = options["pages"]
+        category_id = options["category"]
+        category_name = CATEGORY_MAP.get(category_id, "Event")
 
-        self.stdout.write(
-            self.style.MIGRATE_HEADING(f"\n🎵  Fetching concerts from Ticketmaster for: {', '.join(cities)}\n")
-        )
+        self.stdout.write(self.style.MIGRATE_HEADING(
+            f"\n🎵  Fetching '{category_name}' events from Eventbrite\n"
+            f"    Cities: {', '.join(c.split(',')[0] for c in cities)}\n"
+        ))
 
+        headers = {"Authorization": f"Bearer {token}"}
         created_count = 0
         skipped_count = 0
         error_count = 0
 
         for city in cities:
-            self.stdout.write(f"\n  📍 City: {city}")
-            for page in range(total_pages):
+            city_short = city.split(",")[0]
+            self.stdout.write(f"\n  📍 {city_short}")
+
+            for page in range(1, total_pages + 1):
                 try:
-                    events = self._fetch_events(api_key, city, page)
+                    results, has_more = self._fetch_page(headers, city, category_id, page)
                 except Exception as e:
                     self.stderr.write(self.style.ERROR(f"    API error: {e}"))
-                    continue
+                    break
 
-                for ev in events:
+                for ev in results:
                     try:
-                        result = self._save_event(ev, city)
+                        result = self._save_event(ev, city_short, category_name)
                         if result == "created":
                             created_count += 1
                         else:
                             skipped_count += 1
                     except Exception as e:
-                        title = ev.get("name", "unknown")
-                        self.stderr.write(self.style.ERROR(f"    ❌  Error saving '{title}': {e}"))
+                        name = ev.get("name", {}).get("text", "unknown")
+                        self.stderr.write(self.style.ERROR(f"    ❌  '{name}': {e}"))
                         error_count += 1
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                f"\n✨  Done! Created: {created_count} | Skipped: {skipped_count} | Errors: {error_count}\n"
-            )
-        )
+                if not has_more:
+                    break
 
-    # ─── Helpers ─────────────────────────────────────────────────────────────
+        self.stdout.write(self.style.SUCCESS(
+            f"\n✨  Done! Created: {created_count} | Skipped: {skipped_count} | Errors: {error_count}\n"
+        ))
 
-    def _fetch_events(self, api_key, city, page):
-        """Fetch one page of music events for a city from Ticketmaster."""
+    def _fetch_page(self, headers, city, category_id, page):
         params = {
-            "apikey": api_key,
-            "classificationName": "music",
-            "city": city,
-            "countryCode": "IN",
+            "location.address": city,
+            "location.within": "50km",
+            "categories": category_id,
+            "expand": "venue",
+            "sort_by": "date",
             "page": page,
-            "size": 20,
-            "sort": "date,asc",
         }
-        resp = requests.get(f"{TICKETMASTER_BASE}/events.json", params=params, timeout=10)
+        resp = requests.get(f"{EVENTBRITE_BASE}/events/search/", headers=headers,
+                            params=params, timeout=15)
         resp.raise_for_status()
         data = resp.json()
-        return data.get("_embedded", {}).get("events", [])
+        events = data.get("events", [])
+        has_more = data.get("pagination", {}).get("has_more_items", False)
+        return events, has_more
 
-    def _save_event(self, ev, city):
-        """Parse a Ticketmaster event dict and create an Event record. Returns 'created'/'skipped'."""
-        title = ev.get("name", "").strip()
+    def _save_event(self, ev, city, category_name):
+        title = (ev.get("name") or {}).get("text", "").strip()
         if not title:
             return "skipped"
 
-        # Skip duplicates by title + city
         if Event.objects.filter(title__iexact=title, location__icontains=city).exists():
             self.stdout.write(f"    ⏭  Skipping (exists): {title}")
             return "skipped"
 
-        # Category
-        classifications = ev.get("classifications", [{}])
-        genre = classifications[0].get("genre", {}).get("name", "") if classifications else ""
-        category = genre if genre and genre != "Undefined" else "Music"
+        # Description
+        description = (ev.get("description") or {}).get("text", "") or \
+                      (ev.get("summary") or f"{title} — event in {city}.")
 
-        # Location: venue name + city
-        venues = ev.get("_embedded", {}).get("venues", [{}])
-        venue_name = venues[0].get("name", city) if venues else city
-        location = f"{venue_name}, {city}"
+        # Venue / location
+        venue = ev.get("venue") or {}
+        venue_name = venue.get("name", "")
+        address = (venue.get("address") or {}).get("localized_address_display", city)
+        location = f"{venue_name}, {city}" if venue_name else address or city
 
         # Date
-        dates = ev.get("dates", {})
-        start = dates.get("start", {})
-        date_str = start.get("dateTime") or (start.get("localDate", "") + "T19:00:00+05:30")
+        start = ev.get("start", {})
+        date_str = start.get("utc") or start.get("local", "")
         try:
-            date = parse_datetime(date_str) or timezone.now()
+            date = parse_datetime(date_str) if date_str else timezone.now()
+            if date and timezone.is_naive(date):
+                date = timezone.make_aware(date)
         except Exception:
             date = timezone.now()
 
-        # Description
-        info = ev.get("info") or ev.get("pleaseNote") or ""
-        description = info if info else f"{title} — live concert in {city}."
+        # Category
+        category_ids = [c.get("id") for c in (ev.get("category", []) or [])]
+        category = CATEGORY_MAP.get(str(category_ids[0]), category_name) if category_ids else category_name
 
-        # Language (Ticketmaster doesn't give this; default to English)
-        language = "English"
-
-        # Image: pick the largest available image
+        # Image
         image_cloudinary = self._upload_image(ev, title)
 
         event = Event(
             title=title,
             category=category,
             location=location,
-            language=language,
+            language="English",
             date=date,
-            description=description,
+            description=description[:1000],
         )
         if image_cloudinary:
             event.image = image_cloudinary
@@ -171,24 +189,19 @@ class Command(BaseCommand):
         return "created"
 
     def _upload_image(self, ev, title):
-        """Download event image and upload to Cloudinary. Returns public_id or None."""
-        images = ev.get("images", [])
-        if not images:
+        logo = ev.get("logo")
+        if not logo:
             return None
-
-        # Pick the highest-resolution image
-        best = max(images, key=lambda img: img.get("width", 0) * img.get("height", 0))
-        img_url = best.get("url")
+        img_url = (logo.get("original") or {}).get("url") or logo.get("url")
         if not img_url:
             return None
-
         try:
             resp = requests.get(img_url, timeout=15)
             resp.raise_for_status()
             result = cloudinary.uploader.upload(
                 io.BytesIO(resp.content),
                 folder="concert_images",
-                public_id=f"tm_{ev.get('id', title[:20])}",
+                public_id=f"eb_{ev.get('id', title[:20])}",
                 overwrite=False,
                 resource_type="image",
             )

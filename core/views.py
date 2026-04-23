@@ -3,15 +3,6 @@ from django.db.models import Q
 from movies.models import Movie, Show
 from .models import Event, Match, Stream, Play, Sport, Activity, League, LeagueEvent
 
-def get_selected_location(request):
-    selected_location = request.GET.get("location", "").strip()
-    if selected_location:
-        request.session["selected_location"] = selected_location
-    else:
-        selected_location = request.session.get("selected_location", "Hyderabad")
-    return selected_location
-
-
 def normalize_comma_separated_text(value):
     """
     Cleans strings like:
@@ -341,17 +332,6 @@ def event_detail(request, pk):
             "related_events": related_events,
         },
     )
-
-
-def concert_detail(request, concert_id):
-    item = get_object_or_404(Concert, id=concert_id)
-    suggestions = Concert.objects.exclude(id=item.id)[:5]
-    filtered_item_ids = items.values_list("id", flat=True)
-    suggestions = Concert.objects.exclude(id__in=filtered_item_ids).distinct()[:5]
-    return render(request, "core/concert_detail.html", {
-        "item": item,
-        "suggestions": suggestions,
-    })
 
 
 def match_detail(request, match_id):
