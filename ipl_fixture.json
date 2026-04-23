@@ -1,0 +1,1204 @@
+[
+{
+  "model": "core.league",
+  "pk": 2,
+  "fields": {
+    "title": "Indian Premier League",
+    "sport": "Cricket",
+    "season_text": "IPL 2025",
+    "interest_text": "200M+ Interests",
+    "image": "image/upload/v1776922967/vzjrm4lrox9fspjxbduw.avif",
+    "description": "The Indian Premier League (IPL) is a professional Twenty20 cricket league held annually in India. It features the best players from around the world competing for the coveted IPL trophy."
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 2,
+  "fields": {
+    "league": 2,
+    "match_number": "Kolkata Knight Riders vs Delhi Capitals, 70th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-24",
+    "city": "Kolkata",
+    "team_one": "Kolkata Knight Riders",
+    "team_two": "Delhi Capitals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Eden Gardens, Kolkata",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 3,
+  "fields": {
+    "league": 2,
+    "match_number": "Mumbai Indians vs Rajasthan Royals, 69th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-24",
+    "city": "Mumbai",
+    "team_one": "Mumbai Indians",
+    "team_two": "Rajasthan Royals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Wankhede Stadium, Mumbai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 4,
+  "fields": {
+    "league": 2,
+    "match_number": "Lucknow Super Giants vs Punjab Kings, 68th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-23",
+    "city": "Lucknow",
+    "team_one": "Lucknow Super Giants",
+    "team_two": "Punjab Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 5,
+  "fields": {
+    "league": 2,
+    "match_number": "Sunrisers Hyderabad vs Royal Challengers Bengaluru, 67th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-22",
+    "city": "Hyderabad",
+    "team_one": "Sunrisers Hyderabad",
+    "team_two": "Royal Challengers Bengaluru",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Rajiv Gandhi International Stadium, Hyderabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 6,
+  "fields": {
+    "league": 2,
+    "match_number": "Chennai Super Kings vs Gujarat Titans, 66th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-21",
+    "city": "Ahmedabad",
+    "team_one": "Chennai Super Kings",
+    "team_two": "Gujarat Titans",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Narendra Modi Stadium, Ahmedabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 7,
+  "fields": {
+    "league": 2,
+    "match_number": "Kolkata Knight Riders vs Mumbai Indians, 65th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-20",
+    "city": "Kolkata",
+    "team_one": "Kolkata Knight Riders",
+    "team_two": "Mumbai Indians",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Eden Gardens, Kolkata",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 8,
+  "fields": {
+    "league": 2,
+    "match_number": "Rajasthan Royals vs Lucknow Super Giants, 64th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-19",
+    "city": "Jaipur",
+    "team_one": "Rajasthan Royals",
+    "team_two": "Lucknow Super Giants",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Sawai Mansingh Stadium, Jaipur",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 9,
+  "fields": {
+    "league": 2,
+    "match_number": "Chennai Super Kings vs Sunrisers Hyderabad, 63rd Match, Indian Premier League 2026",
+    "date_heading": "2026-05-18",
+    "city": "Chennai",
+    "team_one": "Chennai Super Kings",
+    "team_two": "Sunrisers Hyderabad",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "MA Chidambaram Stadium, Chennai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 10,
+  "fields": {
+    "league": 2,
+    "match_number": "Delhi Capitals vs Rajasthan Royals, 62nd Match, Indian Premier League 2026",
+    "date_heading": "2026-05-17",
+    "city": "Delhi",
+    "team_one": "Delhi Capitals",
+    "team_two": "Rajasthan Royals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Arun Jaitley Stadium, Delhi",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 11,
+  "fields": {
+    "league": 2,
+    "match_number": "Punjab Kings vs Royal Challengers Bengaluru, 61st Match, Indian Premier League 2026",
+    "date_heading": "2026-05-17",
+    "city": "Dharamsala",
+    "team_one": "Punjab Kings",
+    "team_two": "Royal Challengers Bengaluru",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Himachal Pradesh Cricket Association Stadium, Dharamsala",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 12,
+  "fields": {
+    "league": 2,
+    "match_number": "Kolkata Knight Riders vs Gujarat Titans, 60th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-16",
+    "city": "Kolkata",
+    "team_one": "Kolkata Knight Riders",
+    "team_two": "Gujarat Titans",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Eden Gardens, Kolkata",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 13,
+  "fields": {
+    "league": 2,
+    "match_number": "Lucknow Super Giants vs Chennai Super Kings, 59th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-15",
+    "city": "Lucknow",
+    "team_one": "Lucknow Super Giants",
+    "team_two": "Chennai Super Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 14,
+  "fields": {
+    "league": 2,
+    "match_number": "Punjab Kings vs Mumbai Indians, 58th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-14",
+    "city": "Dharamsala",
+    "team_one": "Punjab Kings",
+    "team_two": "Mumbai Indians",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Himachal Pradesh Cricket Association Stadium, Dharamsala",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 15,
+  "fields": {
+    "league": 2,
+    "match_number": "Royal Challengers Bengaluru vs Kolkata Knight Riders, 57th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-13",
+    "city": "Raipur",
+    "team_one": "Royal Challengers Bengaluru",
+    "team_two": "Kolkata Knight Riders",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Shaheed Veer Narayan Singh International Stadium, Raipur",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 16,
+  "fields": {
+    "league": 2,
+    "match_number": "Gujarat Titans vs Sunrisers Hyderabad, 56th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-12",
+    "city": "Ahmedabad",
+    "team_one": "Gujarat Titans",
+    "team_two": "Sunrisers Hyderabad",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Narendra Modi Stadium, Ahmedabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 17,
+  "fields": {
+    "league": 2,
+    "match_number": "Punjab Kings vs Delhi Capitals, 55th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-11",
+    "city": "Dharamsala",
+    "team_one": "Punjab Kings",
+    "team_two": "Delhi Capitals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Himachal Pradesh Cricket Association Stadium, Dharamsala",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 18,
+  "fields": {
+    "league": 2,
+    "match_number": "Royal Challengers Bengaluru vs Mumbai Indians, 54th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-10",
+    "city": "Raipur",
+    "team_one": "Royal Challengers Bengaluru",
+    "team_two": "Mumbai Indians",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Shaheed Veer Narayan Singh International Stadium, Raipur",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 19,
+  "fields": {
+    "league": 2,
+    "match_number": "Chennai Super Kings vs Lucknow Super Giants, 53rd Match, Indian Premier League 2026",
+    "date_heading": "2026-05-10",
+    "city": "Chennai",
+    "team_one": "Chennai Super Kings",
+    "team_two": "Lucknow Super Giants",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "MA Chidambaram Stadium, Chennai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 20,
+  "fields": {
+    "league": 2,
+    "match_number": "Rajasthan Royals vs Gujarat Titans, 52nd Match, Indian Premier League 2026",
+    "date_heading": "2026-05-09",
+    "city": "Jaipur",
+    "team_one": "Rajasthan Royals",
+    "team_two": "Gujarat Titans",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Sawai Mansingh Stadium, Jaipur",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 21,
+  "fields": {
+    "league": 2,
+    "match_number": "Delhi Capitals vs Kolkata Knight Riders, 51st Match, Indian Premier League 2026",
+    "date_heading": "2026-05-08",
+    "city": "Delhi",
+    "team_one": "Delhi Capitals",
+    "team_two": "Kolkata Knight Riders",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Arun Jaitley Stadium, Delhi",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 22,
+  "fields": {
+    "league": 2,
+    "match_number": "Lucknow Super Giants vs Royal Challengers Bengaluru, 50th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-07",
+    "city": "Lucknow",
+    "team_one": "Lucknow Super Giants",
+    "team_two": "Royal Challengers Bengaluru",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 23,
+  "fields": {
+    "league": 2,
+    "match_number": "Sunrisers Hyderabad vs Punjab Kings, 49th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-06",
+    "city": "Hyderabad",
+    "team_one": "Sunrisers Hyderabad",
+    "team_two": "Punjab Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Rajiv Gandhi International Stadium, Hyderabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 24,
+  "fields": {
+    "league": 2,
+    "match_number": "Delhi Capitals vs Chennai Super Kings, 48th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-05",
+    "city": "Delhi",
+    "team_one": "Delhi Capitals",
+    "team_two": "Chennai Super Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Arun Jaitley Stadium, Delhi",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 25,
+  "fields": {
+    "league": 2,
+    "match_number": "Mumbai Indians vs Lucknow Super Giants, 47th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-04",
+    "city": "Mumbai",
+    "team_one": "Mumbai Indians",
+    "team_two": "Lucknow Super Giants",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Wankhede Stadium, Mumbai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 26,
+  "fields": {
+    "league": 2,
+    "match_number": "Gujarat Titans vs Punjab Kings, 46th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-03",
+    "city": "Ahmedabad",
+    "team_one": "Gujarat Titans",
+    "team_two": "Punjab Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Narendra Modi Stadium, Ahmedabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 27,
+  "fields": {
+    "league": 2,
+    "match_number": "Sunrisers Hyderabad vs Kolkata Knight Riders, 45th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-03",
+    "city": "Hyderabad",
+    "team_one": "Sunrisers Hyderabad",
+    "team_two": "Kolkata Knight Riders",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Rajiv Gandhi International Stadium, Hyderabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 28,
+  "fields": {
+    "league": 2,
+    "match_number": "Chennai Super Kings vs Mumbai Indians, 44th Match, Indian Premier League 2026",
+    "date_heading": "2026-05-02",
+    "city": "Chennai",
+    "team_one": "Chennai Super Kings",
+    "team_two": "Mumbai Indians",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "MA Chidambaram Stadium, Chennai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 29,
+  "fields": {
+    "league": 2,
+    "match_number": "Rajasthan Royals vs Delhi Capitals, 43rd Match, Indian Premier League 2026",
+    "date_heading": "2026-05-01",
+    "city": "Jaipur",
+    "team_one": "Rajasthan Royals",
+    "team_two": "Delhi Capitals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Sawai Mansingh Stadium, Jaipur",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 30,
+  "fields": {
+    "league": 2,
+    "match_number": "Gujarat Titans vs Royal Challengers Bengaluru, 42nd Match, Indian Premier League 2026",
+    "date_heading": "2026-04-30",
+    "city": "Ahmedabad",
+    "team_one": "Gujarat Titans",
+    "team_two": "Royal Challengers Bengaluru",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Narendra Modi Stadium, Ahmedabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 31,
+  "fields": {
+    "league": 2,
+    "match_number": "Mumbai Indians vs Sunrisers Hyderabad, 41st Match, Indian Premier League 2026",
+    "date_heading": "2026-04-29",
+    "city": "Mumbai",
+    "team_one": "Mumbai Indians",
+    "team_two": "Sunrisers Hyderabad",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Wankhede Stadium, Mumbai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 32,
+  "fields": {
+    "league": 2,
+    "match_number": "Punjab Kings vs Rajasthan Royals, 40th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-28",
+    "city": "New Chandigarh",
+    "team_one": "Punjab Kings",
+    "team_two": "Rajasthan Royals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 33,
+  "fields": {
+    "league": 2,
+    "match_number": "Delhi Capitals vs Royal Challengers Bengaluru, 39th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-27",
+    "city": "Delhi",
+    "team_one": "Delhi Capitals",
+    "team_two": "Royal Challengers Bengaluru",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Arun Jaitley Stadium, Delhi",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 34,
+  "fields": {
+    "league": 2,
+    "match_number": "Lucknow Super Giants vs Kolkata Knight Riders, 38th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-26",
+    "city": "Lucknow",
+    "team_one": "Lucknow Super Giants",
+    "team_two": "Kolkata Knight Riders",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 35,
+  "fields": {
+    "league": 2,
+    "match_number": "Gujarat Titans vs Chennai Super Kings, 37th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-26",
+    "city": "Chennai",
+    "team_one": "Gujarat Titans",
+    "team_two": "Chennai Super Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "MA Chidambaram Stadium, Chennai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 36,
+  "fields": {
+    "league": 2,
+    "match_number": "Rajasthan Royals vs Sunrisers Hyderabad, 36th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-25",
+    "city": "Jaipur",
+    "team_one": "Rajasthan Royals",
+    "team_two": "Sunrisers Hyderabad",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Sawai Mansingh Stadium, Jaipur",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 37,
+  "fields": {
+    "league": 2,
+    "match_number": "Delhi Capitals vs Punjab Kings, 35th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-25",
+    "city": "Delhi",
+    "team_one": "Delhi Capitals",
+    "team_two": "Punjab Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Arun Jaitley Stadium, Delhi",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 38,
+  "fields": {
+    "league": 2,
+    "match_number": "Royal Challengers Bengaluru vs Gujarat Titans, 34th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-24",
+    "city": "Bengaluru",
+    "team_one": "Royal Challengers Bengaluru",
+    "team_two": "Gujarat Titans",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "M.Chinnaswamy Stadium, Bengaluru",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 39,
+  "fields": {
+    "league": 2,
+    "match_number": "Mumbai Indians vs Chennai Super Kings, 33rd Match, Indian Premier League 2026",
+    "date_heading": "2026-04-23",
+    "city": "Mumbai",
+    "team_one": "Mumbai Indians",
+    "team_two": "Chennai Super Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Wankhede Stadium, Mumbai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 40,
+  "fields": {
+    "league": 2,
+    "match_number": "Lucknow Super Giants vs Rajasthan Royals, 32nd Match, Indian Premier League 2026",
+    "date_heading": "2026-04-22",
+    "city": "Lucknow",
+    "team_one": "Lucknow Super Giants",
+    "team_two": "Rajasthan Royals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 41,
+  "fields": {
+    "league": 2,
+    "match_number": "Sunrisers Hyderabad vs Delhi Capitals, 31st Match, Indian Premier League 2026",
+    "date_heading": "2026-04-21",
+    "city": "Hyderabad",
+    "team_one": "Sunrisers Hyderabad",
+    "team_two": "Delhi Capitals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Rajiv Gandhi International Stadium, Hyderabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 42,
+  "fields": {
+    "league": 2,
+    "match_number": "Gujarat Titans vs Mumbai Indians, 30th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-20",
+    "city": "Ahmedabad",
+    "team_one": "Gujarat Titans",
+    "team_two": "Mumbai Indians",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Narendra Modi Stadium, Ahmedabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 43,
+  "fields": {
+    "league": 2,
+    "match_number": "Punjab Kings vs Lucknow Super Giants, 29th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-19",
+    "city": "New Chandigarh",
+    "team_one": "Punjab Kings",
+    "team_two": "Lucknow Super Giants",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 44,
+  "fields": {
+    "league": 2,
+    "match_number": "Kolkata Knight Riders vs Rajasthan Royals, 28th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-19",
+    "city": "Kolkata",
+    "team_one": "Kolkata Knight Riders",
+    "team_two": "Rajasthan Royals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Eden Gardens, Kolkata",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 45,
+  "fields": {
+    "league": 2,
+    "match_number": "Sunrisers Hyderabad vs Chennai Super Kings, 27th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-18",
+    "city": "Hyderabad",
+    "team_one": "Sunrisers Hyderabad",
+    "team_two": "Chennai Super Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Rajiv Gandhi International Stadium, Hyderabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 46,
+  "fields": {
+    "league": 2,
+    "match_number": "Royal Challengers Bengaluru vs Delhi Capitals, 26th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-18",
+    "city": "Bengaluru",
+    "team_one": "Royal Challengers Bengaluru",
+    "team_two": "Delhi Capitals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "M.Chinnaswamy Stadium, Bengaluru",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 47,
+  "fields": {
+    "league": 2,
+    "match_number": "Gujarat Titans vs Kolkata Knight Riders, 25th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-17",
+    "city": "Ahmedabad",
+    "team_one": "Gujarat Titans",
+    "team_two": "Kolkata Knight Riders",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Narendra Modi Stadium, Ahmedabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 48,
+  "fields": {
+    "league": 2,
+    "match_number": "Mumbai Indians vs Punjab Kings, 24th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-16",
+    "city": "Mumbai",
+    "team_one": "Mumbai Indians",
+    "team_two": "Punjab Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Wankhede Stadium, Mumbai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 49,
+  "fields": {
+    "league": 2,
+    "match_number": "Royal Challengers Bengaluru vs Lucknow Super Giants, 23rd Match, Indian Premier League 2026",
+    "date_heading": "2026-04-15",
+    "city": "Bengaluru",
+    "team_one": "Royal Challengers Bengaluru",
+    "team_two": "Lucknow Super Giants",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "M.Chinnaswamy Stadium, Bengaluru",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 50,
+  "fields": {
+    "league": 2,
+    "match_number": "Chennai Super Kings vs Kolkata Knight Riders, 22nd Match, Indian Premier League 2026",
+    "date_heading": "2026-04-14",
+    "city": "Chennai",
+    "team_one": "Chennai Super Kings",
+    "team_two": "Kolkata Knight Riders",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "MA Chidambaram Stadium, Chennai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 51,
+  "fields": {
+    "league": 2,
+    "match_number": "Sunrisers Hyderabad vs Rajasthan Royals, 21st Match, Indian Premier League 2026",
+    "date_heading": "2026-04-13",
+    "city": "Hyderabad",
+    "team_one": "Sunrisers Hyderabad",
+    "team_two": "Rajasthan Royals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Rajiv Gandhi International Stadium, Hyderabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 52,
+  "fields": {
+    "league": 2,
+    "match_number": "Mumbai Indians vs Royal Challengers Bengaluru, 20th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-12",
+    "city": "Mumbai",
+    "team_one": "Mumbai Indians",
+    "team_two": "Royal Challengers Bengaluru",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Wankhede Stadium, Mumbai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 53,
+  "fields": {
+    "league": 2,
+    "match_number": "Lucknow Super Giants vs Gujarat Titans, 19th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-12",
+    "city": "Lucknow",
+    "team_one": "Lucknow Super Giants",
+    "team_two": "Gujarat Titans",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 54,
+  "fields": {
+    "league": 2,
+    "match_number": "Chennai Super Kings vs Delhi Capitals, 18th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-11",
+    "city": "Chennai",
+    "team_one": "Chennai Super Kings",
+    "team_two": "Delhi Capitals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "MA Chidambaram Stadium, Chennai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 55,
+  "fields": {
+    "league": 2,
+    "match_number": "Punjab Kings vs Sunrisers Hyderabad, 17th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-11",
+    "city": "New Chandigarh",
+    "team_one": "Punjab Kings",
+    "team_two": "Sunrisers Hyderabad",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 56,
+  "fields": {
+    "league": 2,
+    "match_number": "Rajasthan Royals vs Royal Challengers Bengaluru, 16th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-10",
+    "city": "Guwahati",
+    "team_one": "Rajasthan Royals",
+    "team_two": "Royal Challengers Bengaluru",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Barsapara Cricket Stadium, Guwahati",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 57,
+  "fields": {
+    "league": 2,
+    "match_number": "Kolkata Knight Riders vs Lucknow Super Giants, 15th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-09",
+    "city": "Kolkata",
+    "team_one": "Kolkata Knight Riders",
+    "team_two": "Lucknow Super Giants",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Eden Gardens, Kolkata",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 58,
+  "fields": {
+    "league": 2,
+    "match_number": "Delhi Capitals vs Gujarat Titans, 14th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-08",
+    "city": "Delhi",
+    "team_one": "Delhi Capitals",
+    "team_two": "Gujarat Titans",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Arun Jaitley Stadium, Delhi",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 59,
+  "fields": {
+    "league": 2,
+    "match_number": "Rajasthan Royals vs Mumbai Indians, 13th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-07",
+    "city": "Guwahati",
+    "team_one": "Rajasthan Royals",
+    "team_two": "Mumbai Indians",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Barsapara Cricket Stadium, Guwahati",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 60,
+  "fields": {
+    "league": 2,
+    "match_number": "Kolkata Knight Riders vs Punjab Kings, 12th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-06",
+    "city": "Kolkata",
+    "team_one": "Kolkata Knight Riders",
+    "team_two": "Punjab Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Eden Gardens, Kolkata",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 61,
+  "fields": {
+    "league": 2,
+    "match_number": "Royal Challengers Bengaluru vs Chennai Super Kings, 11th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-05",
+    "city": "Bengaluru",
+    "team_one": "Royal Challengers Bengaluru",
+    "team_two": "Chennai Super Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "M.Chinnaswamy Stadium, Bengaluru",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 62,
+  "fields": {
+    "league": 2,
+    "match_number": "Sunrisers Hyderabad vs Lucknow Super Giants, 10th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-05",
+    "city": "Hyderabad",
+    "team_one": "Sunrisers Hyderabad",
+    "team_two": "Lucknow Super Giants",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Rajiv Gandhi International Stadium, Hyderabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 63,
+  "fields": {
+    "league": 2,
+    "match_number": "Gujarat Titans vs Rajasthan Royals, 9th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-04",
+    "city": "Ahmedabad",
+    "team_one": "Gujarat Titans",
+    "team_two": "Rajasthan Royals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Narendra Modi Stadium, Ahmedabad",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 64,
+  "fields": {
+    "league": 2,
+    "match_number": "Delhi Capitals vs Mumbai Indians, 8th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-04",
+    "city": "Delhi",
+    "team_one": "Delhi Capitals",
+    "team_two": "Mumbai Indians",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Arun Jaitley Stadium, Delhi",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 65,
+  "fields": {
+    "league": 2,
+    "match_number": "Chennai Super Kings vs Punjab Kings, 7th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-03",
+    "city": "Chennai",
+    "team_one": "Chennai Super Kings",
+    "team_two": "Punjab Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "MA Chidambaram Stadium, Chennai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 66,
+  "fields": {
+    "league": 2,
+    "match_number": "Kolkata Knight Riders vs Sunrisers Hyderabad, 6th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-02",
+    "city": "Kolkata",
+    "team_one": "Kolkata Knight Riders",
+    "team_two": "Sunrisers Hyderabad",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Eden Gardens, Kolkata",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 67,
+  "fields": {
+    "league": 2,
+    "match_number": "Lucknow Super Giants vs Delhi Capitals, 5th Match, Indian Premier League 2026",
+    "date_heading": "2026-04-01",
+    "city": "Lucknow",
+    "team_one": "Lucknow Super Giants",
+    "team_two": "Delhi Capitals",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 68,
+  "fields": {
+    "league": 2,
+    "match_number": "Punjab Kings vs Gujarat Titans, 4th Match, Indian Premier League 2026",
+    "date_heading": "2026-03-31",
+    "city": "New Chandigarh",
+    "team_one": "Punjab Kings",
+    "team_two": "Gujarat Titans",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 69,
+  "fields": {
+    "league": 2,
+    "match_number": "Rajasthan Royals vs Chennai Super Kings, 3rd Match, Indian Premier League 2026",
+    "date_heading": "2026-03-30",
+    "city": "Guwahati",
+    "team_one": "Rajasthan Royals",
+    "team_two": "Chennai Super Kings",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Barsapara Cricket Stadium, Guwahati",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 70,
+  "fields": {
+    "league": 2,
+    "match_number": "Mumbai Indians vs Kolkata Knight Riders, 2nd Match, Indian Premier League 2026",
+    "date_heading": "2026-03-29",
+    "city": "Mumbai",
+    "team_one": "Mumbai Indians",
+    "team_two": "Kolkata Knight Riders",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "Wankhede Stadium, Mumbai",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+},
+{
+  "model": "core.leagueevent",
+  "pk": 71,
+  "fields": {
+    "league": 2,
+    "match_number": "Royal Challengers Bengaluru vs Sunrisers Hyderabad, 1st Match, Indian Premier League 2026",
+    "date_heading": "2026-03-28",
+    "city": "Bengaluru",
+    "team_one": "Royal Challengers Bengaluru",
+    "team_two": "Sunrisers Hyderabad",
+    "team_one_logo": null,
+    "team_two_logo": null,
+    "venue": "M.Chinnaswamy Stadium, Bengaluru",
+    "time_text": "Check schedule",
+    "booking_text": "Book Now"
+  }
+}
+]
