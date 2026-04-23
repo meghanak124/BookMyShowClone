@@ -79,7 +79,7 @@
     <section class="bms-row-section">
         <div class="section-top">
             <h2>The Best Of Live Events</h2>
-            <a href="{% url 'events_page' %}">See All</a>
+            <a href="{% url 'events' %}">See All</a>
         </div>
 
         <div class="bms-carousel" data-carousel>
@@ -141,36 +141,7 @@
     </div>
 </section>
 
-    <section class="bms-row-section">
-        <div class="section-top">
-            <h2>Outdoor Events</h2>
-            <a href="{% url 'matches_page' %}">See All</a>
-        </div>
 
-        <div class="bms-carousel" data-carousel>
-            <button class="carousel-nav carousel-prev">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-
-            <div class="bms-carousel-track">
-                {% for item in match_cards %}
-                    <a href="{% url 'match_detail' item.id %}" class="square-event-card">
-                        <div class="square-event-image">
-                            <img src="{{ item.image }}" alt="{{ item.title }}">
-                        </div>
-                        <div class="square-event-content">
-                            <h3>{{ item.title }}</h3>
-                            <p>{{ item.subtitle }}</p>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
-
-            <button class="carousel-nav carousel-next">
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
-        </div>
-    </section>
 
 </div>
 {% endblock %}

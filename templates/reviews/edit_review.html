@@ -1,13 +1,62 @@
-{% extends "base.html" %} {% block content %}
-<section class="review-section">
-    <div class="review-card">
-        <h1>Edit Review</h1>
-        <p><strong>Movie:</strong> {{ review.movie.title }}</p>
+{% extends "base.html" %}
+{% load static %}
 
-        <form method="post" class="review-form">
-            {% csrf_token %} {{ form.as_p }}
-            <button type="submit" class="book-btn">Update Review</button>
-        </form>
+{% block content %}
+<div class="review-page">
+    <div class="review-shell">
+        <div class="review-layout">
+            <div class="review-movie-card">
+                <div class="review-movie-poster">
+                    {% if review.movie.poster %}
+                        <img src="{{ review.movie.poster.url }}" alt="{{ review.movie.title }}">
+                    {% else %}
+                        <img src="{% static 'images/no-poster.png' %}" alt="{{ review.movie.title }}">
+                    {% endif %}
+                </div>
+
+                <div class="review-movie-info">
+                    <p class="review-kicker">Update your opinion</p>
+                    <h1>Edit Review</h1>
+                    <h2>{{ review.movie.title }}</h2>
+
+                    <div class="review-movie-meta">
+                        <span>{{ review.movie.genre }}</span>
+                        <span>{{ review.movie.language }}</span>
+                        <span>{{ review.movie.duration }} mins</span>
+                    </div>
+
+                    <p class="review-movie-description">
+                        You can revise your review and rating anytime to reflect your updated opinion.
+                    </p>
+                </div>
+            </div>
+
+            <div class="review-form-card">
+                <div class="review-form-head">
+                    <h3>Edit Your Review</h3>
+                    <p>Update your rating and rewrite your thoughts clearly.</p>
+                </div>
+
+                <form method="post" class="premium-review-form">
+                    {% csrf_token %}
+
+                    <div class="review-form-group">
+                        <label for="id_rating">Your Rating</label>
+                        {{ form.rating }}
+                    </div>
+
+                    <div class="review-form-group">
+                        <label for="id_content">Your Review</label>
+                        {{ form.content }}
+                    </div>
+
+                    <div class="review-form-actions">
+                        <a href="{% url 'movie_detail' review.movie.id %}" class="review-secondary-btn">Back to Movie</a>
+                        <button type="submit" class="review-primary-btn">Update Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</section>
+</div>
 {% endblock %}

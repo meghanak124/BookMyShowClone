@@ -59,9 +59,9 @@
         <div class="bms-nav-row">
             <div class="bms-nav-inner">
                 <nav class="bms-main-nav">
-                    <a href="{% url 'movie_list' %}" class="{% if request.resolver_match.url_name == 'movie_list' or request.resolver_match.url_name == 'movie_detail' %}active{% endif %}">Movies</a>
+                    <a href="{% url 'movie_list' %}?location={{ selected_location|default:'Hyderabad' }}" class="{% if request.resolver_match.url_name == 'movie_list' %}active{% endif %}">Movies</a>                    
                     <a href="{% url 'streams_page' %}" class="{% if request.resolver_match.url_name == 'streams_page' or request.resolver_match.url_name == 'stream_detail' %}active{% endif %}">Stream</a>
-                    <a href="{% url 'events_page' %}" class="{% if request.resolver_match.url_name == 'events_page' or request.resolver_match.url_name == 'event_detail' %}active{% endif %}">Events</a>
+                    <a href="{% url 'events' %}" class="{% if request.resolver_match.url_name == 'events_page' or request.resolver_match.url_name == 'event_detail' %}active{% endif %}">Events</a>
                     <a href="{% url 'plays_page' %}" class="{% if request.resolver_match.url_name == 'plays_page' or request.resolver_match.url_name == 'play_detail' %}active{% endif %}">Plays</a>
                     <a href="{% url 'sports_page' %}" class="{% if request.resolver_match.url_name == 'sports_page' or request.resolver_match.url_name == 'sport_detail' %}active{% endif %}">Sports</a>
                     <a href="{% url 'activities_page' %}" class="{% if request.resolver_match.url_name == 'activities_page' or request.resolver_match.url_name == 'activity_detail' %}active{% endif %}">Activities</a>
@@ -233,11 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const popularCityGrid = document.getElementById("popularCityGrid");
     const citySearchResults = document.getElementById("citySearchResults");
 
-    const availableCities = [
-        {% for city in available_cities %}
-            "{{ city|escapejs }}",
-        {% endfor %}
-    ];
+    const availableCities = [{% for city in available_cities %}"{{ city|escapejs }}",{% endfor %}];
 
     function goToCity(city) {
         const url = new URL(window.location.href);

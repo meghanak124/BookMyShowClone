@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="streams-page">
+    <div class="streams-shell">
+        <div class="streams-hero">
+            <div class="streams-hero-content">
+                <p class="streams-kicker">Online Streaming</p>
+                <h1>Watch great stories anytime</h1>
+                <p>
+                    Discover trending movies, premium titles, and binge-worthy content from the comfort of your home.
+                </p>
+            </div>
+            <div class="streams-hero-image">
+                <img src="{% static 'images/stream_banner2.png' %}" alt="Streams">
+            </div>
+        </div>
+
+        <div class="streams-section-head">
+            <h2>Popular Streams</h2>
+        </div>
+
+        {% if streams %}
+            <div class="streams-grid">
+                {% for stream in streams %}
+                    <a href="{% url 'stream_detail' stream.id %}" class="stream-card">
+                        <div class="stream-card-image">
+                            {% if stream.image %}
+                                <img src="{{ stream.image.url }}" alt="{{ stream.title }}">
+                            {% else %}
+                                <img src="{% static 'images/no-poster.png' %}" alt="{{ stream.title }}">
+                            {% endif %}
+                        </div>
+                        <div class="stream-card-body">
+                            <h3>{{ stream.title }}</h3>
+                            <p>{{ stream.language }}</p>
+                            <span class="stream-card-tag">{{ stream.genre }}</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="streams-empty">
+                <img src="{% static 'images/empty-filter-state.png' %}" alt="No streams">
+                <h3>No streams available right now</h3>
+                <p>Please check back later for fresh streaming content.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

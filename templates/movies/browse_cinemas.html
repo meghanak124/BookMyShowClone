@@ -20,7 +20,16 @@
                                     <p>Available Seats: {{ show.available_seats }}</p>
                                 </div>
 
-                                <a href="{% url 'book_show' show.id %}" class="book-btn">Book Now</a>
+                                {% now "U" as current_time %}
+                                    {% if show.show_time|date:"U" > current_time %}
+                                        <a href="{% url 'select_seats' show.id %}" class="book-btn">
+                                            Book Tickets
+                                        </a>
+                                    {% else %}
+                                        <button class="book-btn disabled-btn" disabled>
+                                            Booking Closed
+                                        </button>
+                                    {% endif %}
                             </div>
                         {% endfor %}
                     </div>
@@ -32,3 +41,6 @@
     {% endif %}
 </section>
 {% endblock %}
+
+
+

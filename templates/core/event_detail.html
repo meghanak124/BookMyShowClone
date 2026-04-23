@@ -1,46 +1,105 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<section class="movie-detail-section">
-    <div class="movie-detail-card">
-        <div class="movie-detail-left">
-            {% if item.image %}
-                <img src="{{ item.image.url }}" alt="{{ item.title }}">
-            {% endif %}
-        </div>
+<div class="event-detail-page">
+    <div class="event-detail-hero">
+        <div class="event-detail-hero-overlay"></div>
 
-        <div class="movie-detail-right">
-            <h1>{{ item.title }}</h1>
-            <p><strong>Category:</strong> {{ item.category }}</p>
-            <p><strong>Language:</strong> {{ item.language }}</p>
-            <p><strong>Location:</strong> {{ item.location }}</p>
-            <p><strong>Date:</strong> {{ item.date }}</p>
-            <p><strong>Description:</strong> {{ item.description }}</p>
+        <div class="event-detail-shell event-detail-hero-content">
+            <div class="event-detail-poster">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}">
+                {% else %}
+                    <img src="{% static 'images/no-poster.png' %}" alt="{{ event.title }}">
+                {% endif %}
+            </div>
 
-            <a href="#" class="book-btn">Register Now</a>
-        </div>
-    </div>
+            <div class="event-detail-main">
+                <p class="event-detail-kicker">Live Experience</p>
+                <h1>{{ event.title }}</h1>
 
-    <div class="suggestions-section">
-        <div class="section-header">
-            <h2>You May Also Like</h2>
-        </div>
+                <div class="event-detail-badges">
+                    {% if event.category %}
+                        <span class="event-badge">{{ event.category }}</span>
+                    {% endif %}
+                    {% if event.language %}
+                        <span class="event-badge event-badge-dark">{{ event.language }}</span>
+                    {% endif %}
+                    {% if event.location %}
+                        <span class="event-badge event-badge-dark">{{ event.location }}</span>
+                    {% endif %}
+                </div>
 
-        <div class="suggestions-grid">
-            {% for suggestion in suggestions %}
-                <a href="{% url 'event_detail' suggestion.id %}" class="suggestion-link">
-                    <div class="suggestion-card">
-                        {% if suggestion.image %}
-                            <img src="{{ suggestion.image.url }}" alt="{{ suggestion.title }}">
-                        {% endif %}
-                        <div class="suggestion-card-body">
-                            <h3>{{ suggestion.title }}</h3>
-                            <p>{{ suggestion.location }}</p>
-                        </div>
+                <p class="event-detail-description">
+                    {{ event.description }}
+                </p>
+
+                <div class="event-detail-meta">
+                    <div class="event-detail-meta-item">
+                        <span>Date</span>
+                        <strong>{{ event.date|date:"M d, Y" }}</strong>
                     </div>
-                </a>
-            {% endfor %}
+
+                    <div class="event-detail-meta-item">
+                        <span>Location</span>
+                        <strong>{{ event.location }}</strong>
+                    </div>
+
+                    {% if event.language %}
+                        <div class="event-detail-meta-item">
+                            <span>Language</span>
+                            <strong>{{ event.language }}</strong>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="event-detail-actions">
+                    <a href="#" class="event-primary-btn">Book / Register</a>
+                    <a href="{% url 'events' %}" class="event-secondary-btn">Back to Events</a>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+
+    <div class="event-detail-shell">
+        <section class="event-info-section">
+            <div class="event-section-header">
+                <h2>About the Event</h2>
+            </div>
+
+            <div class="event-info-card">
+                <p>{{ event.description }}</p>
+            </div>
+        </section>
+
+        {% if related_events %}
+            <section class="event-related-section">
+                <div class="event-section-header">
+                    <h2>You may also like</h2>
+                </div>
+
+                <div class="event-related-grid">
+                    {% for item in related_events %}
+                        <a href="{% url 'event_detail' item.id %}" class="event-related-card">
+                            <div class="event-related-image">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                                {% else %}
+                                    <img src="{% static 'images/no-poster.png' %}" alt="{{ item.title }}">
+                                {% endif %}
+                            </div>
+
+                            <div class="event-related-body">
+                                <h3>{{ item.title }}</h3>
+                                <p>{{ item.location }}</p>
+                                <p>{{ item.date|date:"M d, Y" }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

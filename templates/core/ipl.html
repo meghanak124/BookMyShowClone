@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="ipl-page">
+    <div class="ipl-container">
+        <h1 class="ipl-title">{{ league.title }}</h1>
+
+        <div class="ipl-top-layout">
+            <div class="ipl-banner-column">
+                <img src="{{ league.image.url }}" alt="{{ league.title }}" class="ipl-main-banner">
+
+                <div class="ipl-meta-row">
+                    <span class="ipl-tag">{{ league.sport }}</span>
+                    <span class="ipl-interest">
+                        <i class="fa-solid fa-thumbs-up"></i> {{ league.interest_text }}
+                    </span>
+                    <button class="ipl-interest-btn">I'm Interested</button>
+                </div>
+
+                <div class="ipl-season-row">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>{{ league.season_text }}</span>
+                </div>
+            </div>
+
+            <div class="ipl-teams-card">
+                <h3>Teams ({{ teams|length }})</h3>
+                <div class="ipl-teams-grid">
+                    {% for team in teams %}
+                        <div class="ipl-team-box">
+                            <img src="{{ team.logo.url }}" alt="{{ team.name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <h2 class="ipl-events-title">{{ events|length }} Events</h2>
+
+        <div class="ipl-events-list">
+            {% for event in events %}
+                <div class="ipl-event-date-group">
+                    <h3>{{ event.date_heading }} | {{ event.city }}</h3>
+
+                    <div class="ipl-match-card">
+                        <p class="match-number">{{ event.match_number }}</p>
+
+                        <div class="match-teams-row">
+                            <div class="team-block">
+                                <img src="{{ event.team_one_logo.url }}" alt="{{ event.team_one }}">
+                                <span>{{ event.team_one }}</span>
+                            </div>
+
+                            <div class="versus-pill">vs</div>
+
+                            <div class="team-block">
+                                <img src="{{ event.team_two_logo.url }}" alt="{{ event.team_two }}">
+                                <span>{{ event.team_two }}</span>
+                            </div>
+                        </div>
+
+                        <div class="match-venue-row">
+                            {{ event.time_text }} | {{ event.venue }}
+                        </div>
+
+                        <div class="match-book-row">
+                            {{ event.booking_text }} <i class="fa-solid fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

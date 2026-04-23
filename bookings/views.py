@@ -12,15 +12,9 @@ def book_show(request, show_id):
     show = get_object_or_404(Show, id=show_id)
     theatre = show.theatre
 
-    if show.show_time <= timezone.now():
-        return render(request, "bookings/show_unavailable.html", {
-            "message": "This show has already ended. Booking is not allowed."
-        })
-
-    if int(show.available_seats) <= 0:
-        return render(request, "bookings/show_unavailable.html", {
-            "message": "This show is sold out."
-        })
+    # Never show unavailable page
+    if show.show_time <= timezone.now() or int(show.available_seats) <= 0:
+        return redirect("movie_detail", movie_id=show.movie.id)
 
     all_seats = []
     for row_index in range(theatre.rows):
@@ -40,12 +34,14 @@ def book_show(request, show_id):
     error = None
 
     if request.method == "POST":
-        selected_seats = request.POST.get("selected_seats", "")
-        seat_list = [seat.strip() for seat in selected_seats.split(",") if seat.strip()]
+        seat_list = request.POST.getlist("selected_seats")
+        seat_list = [seat.strip() for seat in seat_list if seat.strip()]
         seats_booked = len(seat_list)
 
         if show.show_time <= timezone.now():
             error = "This show has already ended."
+        elif int(show.available_seats) <= 0:
+            error = "This show is sold out."
         elif seats_booked == 0:
             error = "Please select at least one seat."
         elif any(seat in booked_seats for seat in seat_list):
@@ -57,7 +53,7 @@ def book_show(request, show_id):
                 user=request.user,
                 show=show,
                 seats_booked=seats_booked,
-                selected_seats=",".join(seat_list),
+                selected_seats=", ".join(seat_list),
             )
             show.available_seats = int(show.available_seats) - seats_booked
             show.save()
@@ -90,6 +86,7 @@ def my_bookings(request):
 
     return render(request, "bookings/my_bookings.html", {"bookings": bookings})
 
+
 @login_required
 def delete_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
@@ -103,3 +100,4 @@ def delete_booking(request, booking_id):
         booking.delete()
 
     return redirect("my_bookings")
+

@@ -11,7 +11,7 @@
             <div class="bms-filter-box">
                 <div class="bms-filter-box-header">
                     <span><i class="fa-solid fa-angle-up"></i> Categories</span>
-                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
+                    <a href="{% url 'events' %}?location={{ selected_location }}">Clear</a>
                 </div>
                 <div class="bms-filter-tags-grid">
                     {% for category in all_categories %}
@@ -27,14 +27,14 @@
             <div class="bms-filter-box">
                 <div class="bms-filter-box-header">
                     <span><i class="fa-solid fa-angle-down"></i> Date</span>
-                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
+                    <a href="{% url 'events' %}?location={{ selected_location }}">Clear</a>
                 </div>
             </div>
 
             <div class="bms-filter-box">
                 <div class="bms-filter-box-header">
                     <span><i class="fa-solid fa-angle-down"></i> Languages</span>
-                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
+                    <a href="{% url 'events' %}?location={{ selected_location }}">Clear</a>
                 </div>
                 <div class="bms-filter-tags-grid">
                     {% for lang in all_languages %}
@@ -50,14 +50,14 @@
             <div class="bms-filter-box">
                 <div class="bms-filter-box-header">
                     <span><i class="fa-solid fa-angle-down"></i> More Filters</span>
-                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
+                    <a href="{% url 'events' %}?location={{ selected_location }}">Clear</a>
                 </div>
             </div>
 
             <div class="bms-filter-box">
                 <div class="bms-filter-box-header">
                     <span><i class="fa-solid fa-angle-down"></i> Price</span>
-                    <a href="{% url 'events_page' %}?location={{ selected_location }}">Clear</a>
+                    <a href="{% url 'events' %}?location={{ selected_location }}">Clear</a>
                 </div>
             </div>
 
@@ -107,7 +107,19 @@
                         </div>
                     </a>
                 {% empty %}
-                    <p>No events found for this city.</p>
+                    <div class="content-empty-state-wrap">
+                        <div class="content-empty-state">
+                            <img src="{% static 'images/empty-filter-state.png' %}" alt="No events found">
+                            <h3>Caught up in the filter-maze</h3>
+                            <p>
+                                Your filter combination didn’t fetch any results.
+                                Try removing a few filters and explore more events.
+                            </p>
+                            <a href="{% url 'events' %}?location={{ selected_location }}" class="reset-filters-btn">
+                                Reset Filters
+                            </a>
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
         </section>

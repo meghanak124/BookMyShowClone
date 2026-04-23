@@ -2,106 +2,291 @@
 {% load static %}
 
 {% block content %}
-<div class="bms-movie-list-page">
-    <div class="bms-movie-list-container">
-
-        <aside class="bms-filters-column">
-            <h2 class="filters-title">Filters</h2>
-
-            <div class="bms-filter-box">
-                <div class="bms-filter-box-header">
-                    <span><i class="fa-solid fa-angle-up"></i> Languages</span>
-                    <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
-                </div>
-                <div class="bms-filter-tags-grid">
-                    {% for lang in all_languages %}
-                        <a
-                            href="?location={{ selected_location }}&language={{ lang }}"
-                            class="bms-filter-tag {% if lang in selected_languages %}active{% endif %}">
-                            {{ lang }}
-                        </a>
-                    {% endfor %}
-                </div>
+<div class="movie-detail-page">
+    <div class="movie-detail-hero">
+        <div class="movie-detail-hero-overlay"></div>
+        <div class="movie-detail-shell movie-detail-hero-content">
+            <div class="movie-detail-poster">
+                {% if movie.poster %}
+                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                {% else %}
+                    <img src="{% static 'images/no-poster.png' %}" alt="{{ movie.title }}">
+                {% endif %}
             </div>
 
-            <div class="bms-filter-box">
-                <div class="bms-filter-box-header">
-                    <span><i class="fa-solid fa-angle-down"></i> Genres</span>
-                    <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
+            <div class="movie-detail-main">
+                <h1>{{ movie.title }}</h1>
+
+                <div class="movie-detail-badges">
+                    <span class="movie-badge">UA</span>
+                    <span class="movie-badge movie-badge-dark">{{ movie.duration }} mins</span>
+                    <span class="movie-badge movie-badge-dark">{{ movie.language }}</span>
+                    <span class="movie-badge movie-badge-dark">{{ movie.genre }}</span>
                 </div>
-                <div class="bms-filter-tags-grid">
-                    {% for genre in all_genres %}
-                        <a
-                            href="?location={{ selected_location }}&genre={{ genre }}"
-                            class="bms-filter-tag {% if genre in selected_genres %}active{% endif %}">
-                            {{ genre }}
-                        </a>
-                    {% endfor %}
+
+                <p class="movie-detail-description">
+                    {{ movie.description }}
+                </p>
+
+                <div class="movie-detail-meta">
+                    <div class="movie-detail-meta-item">
+                        <span>Release Date</span>
+                        <strong>{{ movie.release_date|date:"M d, Y" }}</strong>
+                    </div>
+                    <div class="movie-detail-meta-item">
+                        <span>Language</span>
+                        <strong>{{ movie.language }}</strong>
+                    </div>
+                    <div class="movie-detail-meta-item">
+                        <span>Genre</span>
+                        <strong>{{ movie.genre }}</strong>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="bms-filter-box collapsed">
-                <div class="bms-filter-box-header">
-                    <span><i class="fa-solid fa-angle-down"></i> Format</span>
-                    <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
-                </div>
+    <div class="movie-detail-shell">
+        <section class="movie-shows-section">
+            <div class="movie-section-header">
+                <h2>Available Shows</h2>
             </div>
 
-            <a href="{% url 'browse_cinemas' %}" class="browse-cinemas-btn">Browse by Cinemas</a>
-        </aside>
+            {% if shows %}
+                <div class="movie-show-grid">
+                    {% for show in shows %}
+                        <div class="movie-show-card">
+                            <div class="movie-show-top">
+                                <div>
+                                    <h3>{{ show.theatre.name }}</h3>
+                                    <p>{{ show.theatre.location }}</p>
+                                </div>
+                                <span class="show-seats-left">{{ show.available_seats }} seats left</span>
+                            </div>
 
-        <section class="bms-movies-column">
-            <h1 class="movies-heading">
-                Movies in {{ selected_location }}
-            </h1>
+                            <div class="movie-show-bottom">
+                                <div class="show-time-pill">
+                                    {{ show.show_time|date:"M d, Y • h:i A" }}
+                                </div>
+                                {% now "U" as current_time %}
 
-            {% if selected_languages or selected_genres %}
-                <div class="bms-selected-filters">
-                    {% for lang in selected_languages %}
-                        <span class="selected-filter-chip">{{ lang }}</span>
-                    {% endfor %}
-                    {% for genre in selected_genres %}
-                        <span class="selected-filter-chip">{{ genre }}</span>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            <div class="coming-soon-strip">
-                <span>Coming Soon</span>
-                <a href="#">Explore Upcoming Movies <i class="fa-solid fa-angle-right"></i></a>
-            </div>
-
-            <div class="bms-movie-grid">
-                {% for movie in movies %}
-                    <a href="{% url 'movie_detail' movie.id %}" class="bms-movie-card">
-                        <div class="bms-movie-poster-wrap">
-                            {% if movie.poster %}
-                                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
-                            {% else %}
-                                <img src="{% static 'images/default-poster.jpg' %}" alt="{{ movie.title }}">
-                            {% endif %}
-
-                            <div class="bms-poster-meta-strip">
-                                {% if movie.meta_type == "rating" %}
-                                    <i class="fa-solid fa-star"></i>
-                                {% else %}
-                                    <i class="fa-solid fa-thumbs-up"></i>
-                                {% endif %}
-                                <span>{{ movie.meta_value|default:"-" }}</span>
+                                    {% if show.show_time|date:"U" > current_time and show.available_seats|add:0 > 0 %}
+                                        <a href="{% url 'book_show' show.id %}" class="book-ticket-btn">
+                                            Book Tickets
+                                        </a>
+                                    {% else %}
+                                        <button class="book-ticket-btn disabled-btn" disabled>
+                                            Booking Closed
+                                        </button>
+                                    {% endif %}
                             </div>
                         </div>
-
-                        <div class="bms-movie-card-body">
-                            <h3>{{ movie.title }}</h3>
-                            <p class="movie-cert">{{ movie.duration|default:"UA13+" }}</p>
-                            <p class="movie-lang-genre">{{ movie.language }}</p>
-                        </div>
-                    </a>
-                {% empty %}
-                    <p>No movies found for this city and filter selection.</p>
-                {% endfor %}
-            </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="movie-detail-empty">
+                    <p>No shows available for this movie right now.</p>
+                </div>
+            {% endif %}
         </section>
+
+        <section class="movie-reviews-section">
+    <div class="movie-section-header">
+        <h2>Reviews</h2>
+        {% if user.is_authenticated %}
+            <a href="{% url 'add_review' movie.id %}" class="write-review-btn">Write a Review</a>
+        {% endif %}
     </div>
-</div>
+
+    {% if reviews %}
+        <div class="movie-review-list">
+            {% for review in reviews %}
+                <div class="movie-review-card">
+                    <div class="movie-review-head">
+                        <div>
+                            <h4>{{ review.user.username }}</h4>
+                            <p>{{ review.created_at|date:"M d, Y • h:i A" }}</p>
+                        </div>
+                        <span class="review-rating">{{ review.rating }}/10</span>
+                    </div>
+
+                    <p class="movie-review-text">{{ review.content }}</p>
+
+                    <div class="movie-review-actions">
+                        {% if user.is_authenticated %}
+                            <form method="post" action="{% url 'like_review' review.id %}" class="review-inline-form">
+                                {% csrf_token %}
+                                <button type="submit" class="review-like-btn">
+                                    {% if review.id in user_liked_reviews %}
+                                        ❤️ Liked
+                                    {% else %}
+                                        🤍 Like
+                                    {% endif %}
+                                    {{ review.like_set.count }}
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        {% if review.user == user %}
+                            <a href="{% url 'edit_review' review.id %}" class="review-edit-btn">Edit</a>
+
+                            <form method="post" action="{% url 'delete_review' review.id %}" class="review-inline-form">
+                                {% csrf_token %}
+                                <button type="submit" class="review-delete-btn">Delete</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="movie-detail-empty">
+            <p>No reviews yet. Be the first to review this movie.</p>
+        </div>
+    {% endif %}
+</section>
+
+<section class="movie-comments-section">
+    <div class="movie-section-header movie-section-header-comments">
+        <div>
+            <p class="section-kicker">Join the conversation</p>
+            <h2>Comments</h2>
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+        <div class="comment-composer-card">
+            <form method="post" action="{% url 'add_comment' movie.id %}" class="movie-comment-form premium-comment-form">
+                {% csrf_token %}
+
+                <div class="comment-composer-top simple-comment-top">
+                    <div class="comment-top-left">
+                        <div class="comment-user-avatar">
+                            {{ user.username|first|upper }}
+                        </div>
+                        <div class="comment-composer-meta">
+                            <h4>{{ user.username }}</h4>
+                            <p>Share your thoughts about this movie</p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="post-comment-btn premium-post-btn small-post-btn">
+                        Post Comment
+                    </button>
+                </div>
+
+                <div class="comment-input-wrap compact-comment-input">
+                    <textarea name="content" rows="3" placeholder="Write your comment..." required></textarea>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if comments %}
+        <div class="movie-comment-thread">
+            {% for comment in comments %}
+                {% if not comment.parent %}
+                    <article class="movie-comment-card premium-comment-card">
+                        <div class="comment-card-main">
+                            <div class="comment-avatar">
+                                {{ comment.user.username|first|upper }}
+                            </div>
+
+                            <div class="comment-content-area">
+                                <div class="movie-comment-head premium-comment-head">
+                                    <div class="comment-head-left">
+                                        <h4>{{ comment.user.username }}</h4>
+                                        <p>{{ comment.created_at|date:"M d, Y • h:i A" }}</p>
+                                    </div>
+
+                                    <div class="comment-actions">
+                                        {% if user.is_authenticated %}
+                                            <button type="button"
+                                                    class="reply-toggle-btn premium-reply-btn"
+                                                    onclick="toggleReplyForm('reply-form-{{ comment.id }}')">
+                                                Reply
+                                            </button>
+                                        {% endif %}
+
+                                        {% if request.user.is_authenticated and request.user.id == comment.user.id %}
+                                            <form method="post" action="{% url 'delete_comment' comment.id %}" class="review-inline-form">
+                                                {% csrf_token %}
+                                                <button type="submit" class="review-delete-btn premium-delete-btn">Delete</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="comment-body-box">
+                                    <p class="movie-comment-text">{{ comment.content }}</p>
+                                </div>
+
+                                {% if user.is_authenticated %}
+                                    <form method="post"
+                                          action="{% url 'add_comment' movie.id %}"
+                                          class="reply-form premium-reply-form hidden-reply-form"
+                                          id="reply-form-{{ comment.id }}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                        <textarea name="content" rows="3" placeholder="Write a reply..." required></textarea>
+                                        <div class="reply-form-actions">
+                                            <button type="submit" class="post-comment-btn premium-post-btn">Reply</button>
+                                        </div>
+                                    </form>
+                                {% endif %}
+
+                                {% if comment.replies.all %}
+                                    <div class="reply-list premium-reply-list">
+                                        {% for reply in comment.replies.all %}
+                                            <article class="movie-reply-card premium-reply-card">
+                                                <div class="comment-avatar comment-avatar-small">
+                                                    {{ reply.user.username|first|upper }}
+                                                </div>
+
+                                                <div class="comment-content-area">
+                                                    <div class="movie-comment-head premium-comment-head">
+                                                        <div class="comment-head-left">
+                                                            <h4>{{ reply.user.username }}</h4>
+                                                            <p>{{ reply.created_at|date:"M d, Y • h:i A" }}</p>
+                                                        </div>
+
+                                                        <div class="comment-actions">
+                                                            {% if request.user.is_authenticated and request.user.id == reply.user.id %}
+                                                                <form method="post" action="{% url 'delete_comment' reply.id %}" class="review-inline-form">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit" class="review-delete-btn premium-delete-btn">Delete</button>
+                                                                </form>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="comment-body-box comment-body-box-reply">
+                                                        <p class="movie-comment-text">{{ reply.content }}</p>
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="movie-detail-empty">
+            <p>No comments yet.</p>
+        </div>
+    {% endif %}
+</section>
+
+<script>
+function toggleReplyForm(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    form.classList.toggle("show-reply-form");
+    form.classList.toggle("hidden-reply-form");
+}
+</script>
 {% endblock %}

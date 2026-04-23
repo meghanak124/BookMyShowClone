@@ -3,14 +3,14 @@ from . import views
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path("events/", views.events_page, name="events_page"),
+    path("events/", views.events_page, name="events"),
+    path("events/<int:pk>/", views.event_detail, name="event_detail"),
     path("plays/", views.plays_page, name="plays_page"),
     path("sports/", views.sports_page, name="sports_page"),
     path("activities/", views.activities_page, name="activities_page"),
     path("stream/", views.streams_page, name="streams_page"),
     path("ipl/", views.ipl_page, name="ipl_page"),
 
-    path("events/<int:pk>/", views.event_detail, name="event_detail"),
     path("plays/<int:pk>/", views.play_detail, name="play_detail"),
     path("sports/<int:pk>/", views.sport_detail, name="sport_detail"),
     path("activities/<int:pk>/", views.activity_detail, name="activity_detail"),

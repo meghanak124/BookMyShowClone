@@ -40,6 +40,10 @@
             </div>
         </div>
 
+        {% if error %}
+            <div class="seat-error">{{ error }}</div>
+        {% endif %}
+
         <form method="post" class="seat-booking-layout">
             {% csrf_token %}
 
@@ -66,7 +70,7 @@
                 <div class="seat-grid-wrap">
                     <div
                         class="seat-grid"
-                        style="grid-template-columns: repeat({{ show.theatre.cols }}, minmax(64px, 1fr));"
+                        style="grid-template-columns: repeat({{ show.theatre.columns }}, minmax(64px, 1fr));"
                     >
                         {% for seat in all_seats %}
                             {% if seat in booked_seats %}
@@ -120,34 +124,32 @@
                     </div>
                 </div>
 
-                <button type="submit" class="seat-confirm-btn">
-                    Confirm Booking
-                </button>
+                <button type="submit" class="seat-confirm-btn">Confirm Booking</button>
             </aside>
         </form>
     </div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const checkboxes = document.querySelectorAll(".seat-checkbox");
-        const selectedSeatsText = document.getElementById("selectedSeatsText");
-        const selectedSeatsCount = document.getElementById("selectedSeatsCount");
+document.addEventListener("DOMContentLoaded", function () {
+    const checkboxes = document.querySelectorAll(".seat-checkbox");
+    const selectedSeatsText = document.getElementById("selectedSeatsText");
+    const selectedSeatsCount = document.getElementById("selectedSeatsCount");
 
-        function updateSeatSummary() {
-            const selected = Array.from(checkboxes)
-                .filter(cb => cb.checked)
-                .map(cb => cb.value);
+    function updateSeatSummary() {
+        const selected = Array.from(checkboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
 
-            selectedSeatsText.textContent = selected.length ? selected.join(", ") : "None";
-            selectedSeatsCount.textContent = selected.length;
-        }
+        selectedSeatsText.textContent = selected.length ? selected.join(", ") : "None";
+        selectedSeatsCount.textContent = selected.length;
+    }
 
-        checkboxes.forEach(cb => {
-            cb.addEventListener("change", updateSeatSummary);
-        });
-
-        updateSeatSummary();
+    checkboxes.forEach(cb => {
+        cb.addEventListener("change", updateSeatSummary);
     });
+
+    updateSeatSummary();
+});
 </script>
 {% endblock %}

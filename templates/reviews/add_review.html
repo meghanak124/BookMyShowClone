@@ -1,13 +1,62 @@
-{% extends "base.html" %} {% block content %}
-<section class="review-section">
-    <div class="review-card">
-        <h1>Add Review</h1>
-        <p><strong>Movie:</strong> {{ movie.title }}</p>
+{% extends "base.html" %}
+{% load static %}
 
-        <form method="post" class="review-form">
-            {% csrf_token %} {{ form.as_p }}
-            <button type="submit" class="book-btn">Submit Review</button>
-        </form>
+{% block content %}
+<div class="review-page">
+    <div class="review-shell">
+        <div class="review-layout">
+            <div class="review-movie-card">
+                <div class="review-movie-poster">
+                    {% if movie.poster %}
+                        <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                    {% else %}
+                        <img src="{% static 'images/no-poster.png' %}" alt="{{ movie.title }}">
+                    {% endif %}
+                </div>
+
+                <div class="review-movie-info">
+                    <p class="review-kicker">Share your experience</p>
+                    <h1>Write a Review</h1>
+                    <h2>{{ movie.title }}</h2>
+
+                    <div class="review-movie-meta">
+                        <span>{{ movie.genre }}</span>
+                        <span>{{ movie.language }}</span>
+                        <span>{{ movie.duration }} mins</span>
+                    </div>
+
+                    <p class="review-movie-description">
+                        Tell others what you felt about the story, performances, visuals, and overall experience.
+                    </p>
+                </div>
+            </div>
+
+            <div class="review-form-card">
+                <div class="review-form-head">
+                    <h3>Your Review</h3>
+                    <p>Give your honest opinion and rating.</p>
+                </div>
+
+                <form method="post" class="premium-review-form">
+                    {% csrf_token %}
+
+                    <div class="review-form-group">
+                        <label for="id_rating">Your Rating</label>
+                        {{ form.rating }}
+                    </div>
+
+                    <div class="review-form-group">
+                        <label for="id_content">Your Review</label>
+                        {{ form.content }}
+                    </div>
+
+                    <div class="review-form-actions">
+                        <a href="{% url 'movie_detail' movie.id %}" class="review-secondary-btn">Back to Movie</a>
+                        <button type="submit" class="review-primary-btn">Submit Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</section>
+</div>
 {% endblock %}

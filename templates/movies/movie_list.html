@@ -33,35 +33,51 @@
     </div>
 
     <div class="bms-filter-box">
-        <div class="bms-filter-box-header">
-            <span><i class="fa-solid fa-angle-down"></i> Genres</span>
-            <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
-        </div>
-        <div class="bms-filter-tags-grid">
-            {% for genre in all_genres %}
+    <div class="bms-filter-box-header">
+        <span><i class="fa-solid fa-angle-down"></i> Genres</span>
+        <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
+    </div>
+    <div class="bms-filter-tags-grid">
+        {% for genre in all_genres %}
+            {% if genre in selected_genres %}
                 <a
-                    href="?location={{ selected_location }}&genre={{ genre }}"
-                    class="bms-filter-tag {% if genre in selected_genres %}active{% endif %}">
+                    href="?location={{ selected_location }}{% for l in selected_languages %}&language={{ l }}{% endfor %}{% for g in selected_genres %}{% if g != genre %}&genre={{ g }}{% endif %}{% endfor %}{% for f in selected_formats %}&format={{ f }}{% endfor %}"
+                    class="bms-filter-tag active">
                     {{ genre }}
                 </a>
-            {% endfor %}
-        </div>
+            {% else %}
+                <a
+                    href="?location={{ selected_location }}{% for l in selected_languages %}&language={{ l }}{% endfor %}{% for g in selected_genres %}&genre={{ g }}{% endfor %}&genre={{ genre }}{% for f in selected_formats %}&format={{ f }}{% endfor %}"
+                    class="bms-filter-tag">
+                    {{ genre }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
     </div>
 
     <div class="bms-filter-box">
-        <div class="bms-filter-box-header">
-            <span><i class="fa-solid fa-angle-down"></i> Format</span>
-            <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
-        </div>
-        <div class="bms-filter-tags-grid">
-            {% for fmt in all_formats %}
+    <div class="bms-filter-box-header">
+        <span><i class="fa-solid fa-angle-down"></i> Format</span>
+        <a href="{% url 'movie_list' %}?location={{ selected_location }}">Clear</a>
+    </div>
+    <div class="bms-filter-tags-grid">
+        {% for fmt in all_formats %}
+            {% if fmt in selected_formats %}
                 <a
-                    href="?location={{ selected_location }}&format={{ fmt }}"
-                    class="bms-filter-tag {% if fmt in selected_formats %}active{% endif %}">
+                    href="?location={{ selected_location }}{% for l in selected_languages %}&language={{ l }}{% endfor %}{% for g in selected_genres %}&genre={{ g }}{% endfor %}{% for f in selected_formats %}{% if f != fmt %}&format={{ f }}{% endif %}{% endfor %}"
+                    class="bms-filter-tag active">
                     {{ fmt }}
                 </a>
-            {% endfor %}
-        </div>
+            {% else %}
+                <a
+                    href="?location={{ selected_location }}{% for l in selected_languages %}&language={{ l }}{% endfor %}{% for g in selected_genres %}&genre={{ g }}{% endfor %}{% for f in selected_formats %}&format={{ f }}{% endfor %}&format={{ fmt }}"
+                    class="bms-filter-tag">
+                    {{ fmt }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
     </div>
 
     <a href="{% url 'browse_cinemas' %}" class="browse-cinemas-btn">Browse by Cinemas</a>
@@ -99,42 +115,44 @@
                 <a href="#">Explore Upcoming Movies <i class="fa-solid fa-angle-right"></i></a>
             </div>
 
-            <div class="bms-movie-grid">
-                {% for movie in movies %}
-                    <a href="{% url 'movie_detail' movie.id %}" class="bms-movie-card">
-                        <div class="bms-movie-poster-wrap">
-                            {% if movie.poster %}
-                                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
-                            {% else %}
-                                <img src="{% static 'images/default-poster.jpg' %}" alt="{{ movie.title }}">
-                            {% endif %}
-
-                            <div class="bms-poster-meta-strip">
-                                {% if movie.meta_type == "rating" %}
-                                    <i class="fa-solid fa-star"></i>
+            {% if movies %}
+                <div class="bms-movie-grid">
+                    {% for movie in movies %}
+                        <a href="{% url 'movie_detail' movie.id %}" class="bms-movie-card">
+                            <div class="bms-movie-poster-wrap">
+                                {% if movie.poster %}
+                                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
                                 {% else %}
-                                    <i class="fa-solid fa-thumbs-up"></i>
+                                    <img src="{% static 'images/no-poster.png' %}" alt="{{ movie.title }}">
                                 {% endif %}
-                                <span>{{ movie.meta_value|default:"-" }}</span>
-                            </div>
-                        </div>
 
-                        <div class="bms-movie-card-body">
-                            <h3>{{ movie.title }}</h3>
-                            <p class="movie-cert">{{ movie.duration|default:"UA13+" }}</p>
-                            <p class="movie-lang-genre">{{ movie.language }}</p>
-                        </div>
-                    </a>
-                {% empty %}
-<div class="bms-empty-state">
-    <img src="{% static 'images/empty-filter-state.png' %}" alt="No results">
-    <h3>Caught up in the filter-maze</h3>
-    <p>Your filter combination didn’t fetch any results... Kindly reset to discover more.</p>
-    <a href="{% url 'movie_list' %}?location={{ selected_location }}" class="reset-filters-btn">
-        Reset Filters
-    </a>
-</div>                {% endfor %}
-            </div>
+                                <div class="bms-poster-meta-strip">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>8.5/10</span>
+                                </div>
+                            </div>
+
+                            <div class="bms-movie-card-body">
+                                <h3>{{ movie.title }}</h3>
+                                <p class="movie-cert">{{ movie.genre }}</p>
+                                <p class="movie-lang-genre">{{ movie.language }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="movie-empty-state-wrap">
+                    <div class="movie-empty-state">
+                        <img src="{% static 'images/empty-filter-state.png' %}" alt="No movies found">
+                        <h3>Caught up in the filter-maze</h3>
+                        <p>
+                            Your filter combination didn’t fetch any results.
+                            Try removing a few filters and explore more movies.
+                        </p>
+                        <a href="{% url 'movie_list' %}?location={{ selected_location }}" class="reset-filters-btn">Reset Filters</a>
+                    </div>
+                </div>
+            {% endif %}
         </section>
     </div>
 </div>

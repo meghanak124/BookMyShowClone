@@ -328,15 +328,19 @@ def list_your_show(request):
     return render(request, "core/list_your_show.html")
 
 
-def event_detail(request, event_id):
-    item = get_object_or_404(Event, id=event_id)
-    suggestions = Event.objects.exclude(id=item.id)[:5]
-    filtered_item_ids = items.values_list("id", flat=True)
-    suggestions = Event.objects.exclude(id__in=filtered_item_ids).distinct()[:5]
-    return render(request, "core/event_detail.html", {
-        "item": item,
-        "suggestions": suggestions,
-    })
+def event_detail(request, pk):
+    event = get_object_or_404(Event, id=pk)
+
+    related_events = Event.objects.exclude(id=event.id)[:4]
+
+    return render(
+        request,
+        "core/event_detail.html",
+        {
+            "event": event,
+            "related_events": related_events,
+        },
+    )
 
 
 def concert_detail(request, concert_id):
